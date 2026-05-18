@@ -1,0 +1,137 @@
+/* =========================================================
+   obrigado.html — page-specific styles
+   ========================================================= */
+
+.nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-left: auto;
+  transition: color 0.15s var(--ease);
+}
+.nav-back:hover { color: var(--accent); }
+
+/* =========================================================
+   Hero de sucesso
+   ========================================================= */
+.thanks-hero {
+  padding: clamp(64px, 9vw, 120px) 0 clamp(48px, 7vw, 80px);
+  position: relative;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 179, 0, 0.14), transparent 55%),
+    radial-gradient(circle at 50% 100%, rgba(20, 40, 90, 0.10), transparent 60%),
+    var(--bg);
+}
+.thanks-hero .text-center .lead { margin-left: auto; margin-right: auto; }
+.thanks-hero .h1 { max-width: 760px; margin-left: auto; margin-right: auto; margin-bottom: 18px; }
+.thanks-hero .eyebrow { display: inline-block; margin-bottom: 20px; }
+
+.thanks-icon {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #0a1018;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 0 0 8px rgba(255, 179, 0, 0.10),
+    0 0 0 20px rgba(255, 179, 0, 0.04),
+    0 18px 50px rgba(255, 179, 0, 0.32);
+  animation: thanks-pop 0.6s cubic-bezier(0.22, 1.36, 0.44, 1) backwards;
+}
+.thanks-icon .icon { width: 48px; height: 48px; stroke-width: 3; }
+@keyframes thanks-pop {
+  0% { opacity: 0; transform: scale(0.6); }
+  60% { transform: scale(1.06); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* =========================================================
+   Section head (centralized)
+   ========================================================= */
+.thanks-head {
+  text-align: center;
+  margin-bottom: 48px;
+}
+.thanks-head .h2 { margin: 0 auto 12px; max-width: 760px; }
+
+/* =========================================================
+   Steps (3 cards)
+   ========================================================= */
+.thanks-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.thanks-step {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
+  transition: border-color 0.2s var(--ease), transform 0.2s var(--ease);
+}
+.thanks-step:hover { border-color: var(--accent-soft); transform: translateY(-3px); }
+.thanks-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #0a1018;
+  font-size: 1.15rem;
+  font-weight: 900;
+  margin-bottom: 18px;
+}
+.thanks-step h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+.thanks-step p {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+@media (max-width: 880px) { .thanks-steps { grid-template-columns: 1fr; } }
+
+/* =========================================================
+   CTA WhatsApp
+   ========================================================= */
+.thanks-cta {
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 179, 0, 0.08), transparent 60%),
+    var(--bg-deep);
+  border-top: 1px solid var(--border);
+}
+.thanks-cta .h2 { margin: 0 auto 14px; max-width: 600px; }
+.thanks-cta .lead { margin: 0 auto 32px; }
+.thanks-cta .btn .icon { width: 20px; height: 20px; fill: currentColor; stroke: none; }
+.thanks-cta .microcopy {
+  font-size: 13px;
+  color: var(--text-subtle);
+  letter-spacing: 0.02em;
+}
+
+/* =========================================================
+   Mobile
+   ========================================================= */
+@media (max-width: 768px) {
+  .thanks-hero { padding: 56px 0 40px; }
+  .thanks-icon { width: 80px; height: 80px; margin-bottom: 22px; }
+  .thanks-icon .icon { width: 40px; height: 40px; }
+  .thanks-head { margin-bottom: 32px; }
+  .thanks-step { padding: 24px 22px; }
+  .thanks-cta .lead { margin-bottom: 24px; }
+}

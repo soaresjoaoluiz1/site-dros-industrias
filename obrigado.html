@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedido recebido — DROS Sales</title>
+  <meta name="robots" content="noindex,nofollow">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="obrigado.css">
+
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1112856240610448');
+  fbq('track', 'PageView');
+
+  // Dispara CONVERSÃO Lead com event_id (deduplicação com CAPI no CRM)
+  (function () {
+    const params = new URLSearchParams(location.search);
+    const eventId = params.get('event_id') || ('lead-' + Date.now());
+    fbq('track', 'Lead', {
+      content_name: 'Diagnóstico DROS',
+      content_category: 'industria',
+      currency: 'BRL'
+    }, { eventID: eventId });
+  })();
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1112856240610448&ev=Lead&noscript=1"/></noscript>
+  <!-- End Meta Pixel Code -->
+</head>
+<body>
+
+  <!-- SVG icons usados na página -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+      <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" x2="5" y1="12" y2="12"/><polyline points="12 19 5 12 12 5"/></symbol>
+      <symbol id="i-wpp" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></symbol>
+    </defs>
+  </svg>
+
+  <!-- ===== HEADER ===== -->
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="assets/img/logo-dros-sales.png" alt="DROS Sales" class="logo-img">
+      </a>
+      <a href="index.html" class="nav-back"><svg class="icon icon-sm"><use href="#i-arrow-left"/></svg> Voltar ao site</a>
+    </div>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="thanks-hero">
+    <div class="wrap text-center">
+      <div class="thanks-icon"><svg class="icon"><use href="#i-check"/></svg></div>
+      <span class="eyebrow">Confirmado</span>
+      <h1 class="h1">Pedido recebido. <span class="accent">Falamos com você em breve.</span></h1>
+      <p class="lead lead--center">Em até <strong>1 dia útil</strong> entraremos em contato pelo WhatsApp com 2 ou 3 horários sugeridos para tua conversa de 15 minutos.</p>
+    </div>
+  </section>
+
+  <!-- ===== O QUE ACONTECE AGORA ===== -->
+  <section class="section section--alt">
+    <div class="wrap">
+      <div class="thanks-head">
+        <span class="eyebrow">Próximos passos</span>
+        <h2 class="h2">O que acontece agora</h2>
+      </div>
+
+      <div class="thanks-steps">
+        <article class="thanks-step">
+          <div class="thanks-step-num">1</div>
+          <h3>Resposta em até 1 dia útil</h3>
+          <p>Vamos te chamar no WhatsApp com horários disponíveis para conversa. Não enviamos proposta empurrada — só os horários para tu escolher.</p>
+        </article>
+        <article class="thanks-step">
+          <div class="thanks-step-num">2</div>
+          <h3>Conversa de 15 minutos</h3>
+          <p>Olhamos juntos como tua indústria vende hoje, onde está o gargalo do canal e onde existem oportunidades concretas no curto prazo.</p>
+        </article>
+        <article class="thanks-step">
+          <div class="thanks-step-num">3</div>
+          <h3>Caminho claro</h3>
+          <p>Se fizer sentido, mostramos como podemos seguir juntos. Se não for o melhor momento para tua indústria, indicamos uma direção — sem custo.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA WHATSAPP DIRETO ===== -->
+  <section class="section thanks-cta">
+    <div class="wrap text-center">
+      <h2 class="h2">Quer adiantar?</h2>
+      <p class="lead lead--center">Fala com a gente agora mesmo no WhatsApp. Atendemos em horário comercial.</p>
+      <a href="https://wa.me/5541995211546?text=Acabei%20de%20pedir%20o%20diagn%C3%B3stico%20no%20site.%20Quero%20adiantar%20a%20conversa." class="btn btn--primary btn--lg" target="_blank" rel="noopener">
+        <svg class="icon"><use href="#i-wpp"/></svg> Falar no WhatsApp
+      </a>
+      <p class="microcopy" style="margin-top: 18px;">(41) 99521-1546 · contato@drossales.com.br</p>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+        <p>© 2025 DROS Sales. Todos os direitos reservados.</p>
+        <p>Canal de vendas para indústria vender mais.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
