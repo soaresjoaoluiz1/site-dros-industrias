@@ -15,6 +15,11 @@
 }
 .nav-back:hover { color: var(--accent); }
 
+/* Mobile: esconde "Voltar ao site" e centraliza o logo igual a home */
+@media (max-width: 768px) {
+  .nav-back { display: none; }
+}
+
 /* =========================================================
    Hero
    ========================================================= */
