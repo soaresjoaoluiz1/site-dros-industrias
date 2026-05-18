@@ -1,0 +1,12 @@
+{
+  "name": "site-dros-industrias",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Site institucional + landing DROS Sales para industrias",
+  "scripts": {
+    "optimize": "node optimize-images.js"
+  },
+  "devDependencies": {
+    "sharp": "^0.33.5"
+  }
+}
