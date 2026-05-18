@@ -33,7 +33,7 @@ Site institucional + landing de diagnóstico para a **DROS Sales** — a frente 
 - **CTA final** + **Footer** com navegação, segmentos, contato
 
 ### `/diagnostico.html` — Landing de captura
-- Hero com bullets de garantia (15 min, sem compromisso, confidencial)
+- Hero com bullets de garantia (30 min, sem compromisso, confidencial)
 - **Formulário multi-step em 3 etapas** com barra de progresso:
   1. **Identificação** — Nome, Empresa/Indústria, WhatsApp
   2. **Sua empresa** — Segmento, Faturamento mensal, Como pretende expandir
