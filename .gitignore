@@ -1,0 +1,29 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node (caso alguém adicione build futuro)
+node_modules/
+.cache/
+dist/
+.parcel-cache/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Env / segredos (caso o LEAD_SECRET vire env futuramente)
+.env
+.env.local
+*.secret
+
+# Backup
+*~
+*.bak

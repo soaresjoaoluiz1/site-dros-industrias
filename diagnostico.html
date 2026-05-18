@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diagnóstico DROS Sales — Entenda onde sua indústria está perdendo venda</title>
+  <meta name="description" content="Conversa inicial de 15 minutos, sem compromisso. Mapeamos onde sua indústria está perdendo oportunidade no canal de vendas.">
+
+  <meta property="og:title" content="Diagnóstico DROS Sales">
+  <meta property="og:description" content="Mapeamos onde sua indústria está perdendo oportunidade no canal de vendas.">
+  <meta property="og:type" content="website">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="diagnostico.css">
+
+  <!-- ===== TRACKING CAPTURE (UTMs, click IDs, cookies, contexto) =====
+       Roda antes de tudo. Persiste em sessionStorage para sobreviver à navegação.
+       Os valores são lidos no submit do form.
+  -->
+  <script>
+  (function () {
+    const SESSION_KEY = 'dros_tracking';
+    let tracking = {};
+    try { tracking = JSON.parse(sessionStorage.getItem(SESSION_KEY) || '{}'); } catch (_) {}
+
+    const params = new URLSearchParams(window.location.search);
+
+    // 1) UTMs e click IDs — só sobrescreve se vier valor novo na URL
+    const TRACK_PARAMS = [
+      // UTMs padrão Google Analytics
+      'utm_source','utm_medium','utm_campaign','utm_term','utm_content','utm_id',
+      // Click IDs por plataforma
+      'fbclid',     // Facebook / Instagram (Meta)
+      'gclid','gbraid','wbraid', // Google Ads
+      'ttclid',     // TikTok Ads
+      'li_fat_id',  // LinkedIn Ads
+      'msclkid',    // Microsoft / Bing Ads
+      'twclid',     // X (Twitter) Ads
+      'epik',       // Pinterest
+      'ScCid',      // Snap Ads
+    ];
+    TRACK_PARAMS.forEach(p => { if (params.get(p)) tracking[p] = params.get(p); });
+
+    // 2) Contexto da sessão — só salva uma vez
+    if (!tracking.landing_page) tracking.landing_page = location.href;
+    if (!tracking.referrer && document.referrer) tracking.referrer = document.referrer;
+    if (!tracking.session_start) tracking.session_start = Date.now();
+
+    // 3) Cookies do Meta Pixel (necessários para CAPI / deduplicação)
+    const getCookie = (name) => {
+      const m = document.cookie.match(new RegExp('(^|; )' + name + '=([^;]+)'));
+      return m ? decodeURIComponent(m[2]) : '';
+    };
+    tracking._fbp = getCookie('_fbp');
+    let fbc = getCookie('_fbc');
+    // Se tem fbclid mas o cookie _fbc não foi setado pelo Pixel ainda, montar manualmente (formato Meta)
+    if (!fbc && tracking.fbclid) {
+      fbc = 'fb.1.' + Date.now() + '.' + tracking.fbclid;
+    }
+    tracking._fbc = fbc;
+
+    // 4) Cookie do Google Analytics (client id)
+    const ga = getCookie('_ga');
+    if (ga) tracking._ga = ga;
+    // Extrai client_id puro (GA1.2.XXXX.YYYY → XXXX.YYYY)
+    const gaMatch = ga.match(/^GA\d\.\d\.(.+)$/);
+    if (gaMatch) tracking._ga_cid = gaMatch[1];
+
+    // 5) Inferência de tipo de tráfego
+    const inferTrafficType = (t) => {
+      if (t.fbclid || t.gclid || t.gbraid || t.wbraid || t.ttclid || t.msclkid || t.li_fat_id) return 'paid';
+      if (['cpc','ppc','paid','paid-social','paid_social','cpm'].includes((t.utm_medium||'').toLowerCase())) return 'paid';
+      if ((t.utm_medium||'').toLowerCase() === 'email') return 'email';
+      if (['social','social-network','sm'].includes((t.utm_medium||'').toLowerCase())) return 'social';
+      if ((t.utm_medium||'').toLowerCase() === 'organic') return 'organic';
+      const ref = (t.referrer||'').toLowerCase();
+      if (!ref) return 'direct';
+      if (/google\.|bing\.|duckduckgo\.|yahoo\.|yandex\./.test(ref)) return 'organic';
+      if (/facebook\.|instagram\.|linkedin\.|t\.co|twitter\.|x\.com|tiktok\.|youtube\./.test(ref)) return 'social';
+      return 'referral';
+    };
+    tracking.traffic_type = inferTrafficType(tracking);
+
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(tracking));
+    window._drosTracking = tracking;
+  })();
+  </script>
+</head>
+<body>
+
+  <!-- ===== SVG ICON SPRITE ===== -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+      <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></symbol>
+      <symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+      <symbol id="i-message" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+      <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+      <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" x2="5" y1="12" y2="12"/><polyline points="12 19 5 12 12 5"/></symbol>
+    </defs>
+  </svg>
+
+  <!-- ===== HEADER ===== -->
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="assets/img/logo-dros-sales.png" alt="DROS Sales" class="logo-img">
+      </a>
+      <a href="index.html" class="nav-back"><svg class="icon icon-sm"><use href="#i-arrow-left"/></svg> Voltar ao site</a>
+    </div>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="diag-hero">
+    <div class="wrap diag-hero-inner">
+      <div>
+        <span class="eyebrow">Diagnóstico DROS Sales</span>
+        <h1 class="h1">Entenda onde sua indústria está <span class="accent">perdendo venda.</span></h1>
+        <p class="lead">Uma conversa de 15 minutos para olhar tua operação, teu produto e onde a venda pode estar travando. Não é para empurrar proposta. É para entender se faz sentido avançar.</p>
+        <ul class="diag-bullets">
+          <li><svg class="icon"><use href="#i-clock"/></svg><span><strong>15 minutos</strong> de conversa, sem compromisso</span></li>
+          <li><svg class="icon"><use href="#i-search"/></svg><span>Mapeamento dos <strong>gargalos do canal</strong></span></li>
+          <li><svg class="icon"><use href="#i-target"/></svg><span>Identificação de <strong>oportunidades concretas</strong></span></li>
+          <li><svg class="icon"><use href="#i-lock"/></svg><span>100% confidencial. Sem cobrança.</span></li>
+        </ul>
+      </div>
+
+      <!-- FORM CARD (3 etapas) -->
+      <aside class="diag-form-card">
+        <div class="diag-form-title">Preencha para agendar</div>
+
+        <!-- Progress bar -->
+        <div class="form-progress">
+          <div class="form-progress-track"><div class="form-progress-fill" style="width: 33.33%"></div></div>
+          <div class="form-steps-labels">
+            <span class="step-label active" data-label="1">Identificação</span>
+            <span class="step-label" data-label="2">Sua empresa</span>
+            <span class="step-label" data-label="3">Investimento</span>
+          </div>
+        </div>
+
+        <form id="diag-form" novalidate>
+
+          <!-- ===== STEP 1 — Identificação ===== -->
+          <div class="form-step active" data-step="1">
+            <label class="diag-field">
+              <span class="diag-label">Nome completo *</span>
+              <input type="text" name="nome" placeholder="Seu nome" required>
+            </label>
+            <label class="diag-field">
+              <span class="diag-label">Nome da indústria / empresa *</span>
+              <input type="text" name="empresa" placeholder="Ex: Quimiprol Indústria" required>
+            </label>
+            <label class="diag-field">
+              <span class="diag-label">WhatsApp *</span>
+              <input type="tel" name="whatsapp" placeholder="(41) 99999-9999" required>
+            </label>
+          </div>
+
+          <!-- ===== STEP 2 — Sua empresa ===== -->
+          <div class="form-step" data-step="2">
+            <label class="diag-field">
+              <span class="diag-label">Segmento da indústria *</span>
+              <select name="segmento" required>
+                <option value="">Selecione...</option>
+                <option>Produto de limpeza</option>
+                <option>Indústria química</option>
+                <option>Cosméticos</option>
+                <option>Embalagens</option>
+                <option>Automotivo</option>
+                <option>Ração animal</option>
+                <option>ARLA</option>
+                <option>Metalúrgica</option>
+                <option>Equipamentos</option>
+                <option>Alimentos</option>
+                <option>Outros</option>
+              </select>
+            </label>
+            <label class="diag-field">
+              <span class="diag-label">Faturamento mensal aproximado *</span>
+              <select name="faturamento" required>
+                <option value="">Selecione...</option>
+                <option>Até R$ 100 mil</option>
+                <option>R$ 100 mil – R$ 500 mil</option>
+                <option>R$ 500 mil – R$ 1 milhão</option>
+                <option>R$ 1 mi – R$ 5 mi</option>
+                <option>R$ 5 mi – R$ 10 mi</option>
+                <option>Acima de R$ 10 mi</option>
+                <option>Prefiro não informar</option>
+              </select>
+            </label>
+            <label class="diag-field">
+              <span class="diag-label">Como pretende expandir? *</span>
+              <select name="expansao" required>
+                <option value="">Selecione...</option>
+                <option>E-commerce</option>
+                <option>Marketplaces</option>
+                <option>Revendedores</option>
+                <option>Franquias</option>
+                <option>Não sei ainda</option>
+              </select>
+            </label>
+          </div>
+
+          <!-- ===== STEP 3 — Investimento ===== -->
+          <div class="form-step" data-step="3">
+            <div class="diag-field">
+              <span class="diag-label">Investe em anúncios online hoje? *</span>
+              <div class="radio-row">
+                <label class="radio-pill">
+                  <input type="radio" name="anuncia" value="sim" required>
+                  <span>Sim</span>
+                </label>
+                <label class="radio-pill">
+                  <input type="radio" name="anuncia" value="nao" required>
+                  <span>Ainda não</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="ads-detail" id="ads-detail" hidden>
+              <div class="diag-field">
+                <span class="diag-label">Quais plataformas? <span class="opt">(marque todas que se aplicam)</span></span>
+                <div class="check-grid">
+                  <label class="check-pill"><input type="checkbox" name="plataformas" value="Meta Ads"><span>Meta Ads</span></label>
+                  <label class="check-pill"><input type="checkbox" name="plataformas" value="Google Ads"><span>Google Ads</span></label>
+                  <label class="check-pill"><input type="checkbox" name="plataformas" value="TikTok Ads"><span>TikTok Ads</span></label>
+                  <label class="check-pill"><input type="checkbox" name="plataformas" value="LinkedIn Ads"><span>LinkedIn Ads</span></label>
+                </div>
+              </div>
+
+              <label class="diag-field">
+                <span class="diag-label">Quanto investe ao total por mês? (R$)</span>
+                <input type="text" name="investimento" placeholder="Ex: R$ 5.000">
+              </label>
+            </div>
+          </div>
+
+          <!-- Navegação -->
+          <div class="form-nav">
+            <button type="button" class="btn btn--ghost btn-back" hidden><span class="arrow">←</span> Voltar</button>
+            <button type="button" class="btn btn--primary btn-next">Continuar <span class="arrow">→</span></button>
+            <button type="submit" class="btn btn--primary btn-submit" hidden>Quero meu diagnóstico <span class="arrow">→</span></button>
+          </div>
+
+          <p class="diag-microcopy"><svg class="icon icon-sm"><use href="#i-lock"/></svg> Seus dados ficam só com a DROS. Sem spam.</p>
+        </form>
+
+        <div class="diag-success" id="diag-success" hidden>
+          <svg class="icon icon-xl" style="color:var(--accent);margin:0 auto 16px"><use href="#i-check"/></svg>
+          <h3>Pedido recebido!</h3>
+          <p>Em até 1 dia útil entraremos em contato pelo WhatsApp para agendar tua conversa.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ===== O QUE VAMOS AVALIAR ===== -->
+  <section class="section">
+    <div class="wrap">
+      <div class="diag-head">
+        <span class="eyebrow">O que vamos avaliar</span>
+        <h2 class="h2">7 pontos que mostram onde está <span class="accent">o gargalo do canal</span>.</h2>
+        <p class="lead lead--center">Não é teste de pizza. É um mapa simples e direto da operação. Em 15 minutos a gente identifica o que mais pesa hoje.</p>
+      </div>
+
+      <div class="diag-checklist">
+        <div class="diag-item"><svg class="icon"><use href="#i-check"/></svg><span>Como sua indústria aparece para comprador novo</span></div>
+        <div class="diag-item"><svg class="icon"><use href="#i-check"/></svg><span>Onde os interessados chegam (WhatsApp, site, ligação, indicação)</span></div>
+        <div class="diag-item"><svg class="icon"><use href="#i-check"/></svg><span>Tempo médio de resposta e processo de atendimento</span></div>
+        <div class="diag-item"><svg class="icon"><use href="#i-check"/></svg><span>Quantos representantes ou revendedores estão ativos</span></div>
+        <div class="diag-item"><svg class="icon"><use href="#i-check"/></svg><span>Regiões cobertas vs. regiões com oportunidade parada</span></div>
+        <div class="diag-item"><svg class="icon"><use href="#i-check"/></svg><span>Cliente antigo: tem cadência de recompra?</span></div>
+        <div class="diag-item"><svg class="icon"><use href="#i-check"/></svg><span>O que dá pra organizar primeiro para virar pedido novo</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COMO FUNCIONA ===== -->
+  <section class="section section--alt">
+    <div class="wrap">
+      <div class="diag-head">
+        <span class="eyebrow">Como funciona</span>
+        <h2 class="h2">3 passos. Sem complicação.</h2>
+      </div>
+
+      <div class="diag-steps">
+        <div class="diag-step">
+          <div class="diag-step-num">1</div>
+          <h3>Você preenche o formulário</h3>
+          <p>Leva menos de 2 minutos. Só os dados essenciais para a gente entender tua operação antes de conversar.</p>
+        </div>
+        <div class="diag-step">
+          <div class="diag-step-num">2</div>
+          <h3>Agendamos pelo WhatsApp</h3>
+          <p>Em até 1 dia útil retornamos com 2 ou 3 horários sugeridos. Você escolhe o que cabe na agenda.</p>
+        </div>
+        <div class="diag-step">
+          <div class="diag-step-num">3</div>
+          <h3>Conversa de 15 minutos</h3>
+          <p>Por telefone ou videochamada. A gente olha tua operação e mostra onde a venda pode estar travando. Sem proposta empurrada.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section class="section">
+    <div class="wrap">
+      <div class="diag-head">
+        <span class="eyebrow">Perguntas frequentes</span>
+        <h2 class="h2">As dúvidas que mais aparecem.</h2>
+      </div>
+
+      <div class="diag-faq">
+        <details class="diag-faq-item" open>
+          <summary>O diagnóstico é cobrado?</summary>
+          <p>Não. A primeira conversa é totalmente gratuita. Serve para entendermos se faz sentido seguir e, se sim, em que ponto a gente pode ajudar.</p>
+        </details>
+        <details class="diag-faq-item">
+          <summary>Preciso ser indústria grande para participar?</summary>
+          <p>Não. A gente trabalha bem com indústrias de R$ 500 mil a R$ 10 milhões/mês. Se você fabrica, distribui ou vende produto físico e precisa colocar mais gente comprando, faz sentido conversar.</p>
+        </details>
+        <details class="diag-faq-item">
+          <summary>Quanto tempo dura a conversa?</summary>
+          <p>15 minutos é o suficiente para a gente entender o cenário. Se o assunto render, a gente conversa por mais tempo — mas nunca empurramos a conversa.</p>
+        </details>
+        <details class="diag-faq-item">
+          <summary>Meus dados estão seguros?</summary>
+          <p>Sim. As informações ficam apenas com a equipe da DROS, são tratadas como confidenciais e nunca são repassadas para terceiros.</p>
+        </details>
+        <details class="diag-faq-item">
+          <summary>E se eu não for o perfil ideal?</summary>
+          <p>A gente fala de boa. Se a DROS não for o melhor caminho para tua indústria nesse momento, indicamos uma direção — sem custo, sem proposta.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FINAL CTA ===== -->
+  <section class="section final">
+    <div class="wrap text-center">
+      <h2 class="h2">Pronto para olhar o cenário com a gente?</h2>
+      <p class="lead lead--center">Preenche o formulário no topo da página. Em 1 dia útil a gente retorna.</p>
+      <div class="btn-row" style="justify-content: center; margin-top: 24px;">
+        <a href="#diag-form" class="btn btn--primary btn--lg">Quero meu diagnóstico <span class="arrow">→</span></a>
+        <a href="index.html" class="btn btn--ghost btn--lg">Voltar ao site</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+        <p>© 2025 DROS Sales. Todos os direitos reservados.</p>
+        <p>Canal de vendas para indústria vender mais.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Form multi-step + submit
+    (function () {
+      const form = document.getElementById('diag-form');
+      const success = document.getElementById('diag-success');
+      if (!form) return;
+
+      const steps = form.querySelectorAll('.form-step');
+      const stepLabels = document.querySelectorAll('.step-label');
+      const progressFill = document.querySelector('.form-progress-fill');
+      const btnBack = form.querySelector('.btn-back');
+      const btnNext = form.querySelector('.btn-next');
+      const btnSubmit = form.querySelector('.btn-submit');
+      const adsDetail = document.getElementById('ads-detail');
+      const total = steps.length;
+      let current = 1;
+
+      const showStep = (n) => {
+        steps.forEach((s) => s.classList.toggle('active', +s.dataset.step === n));
+        stepLabels.forEach((l) => l.classList.toggle('active', +l.dataset.label === n));
+        stepLabels.forEach((l) => l.classList.toggle('done', +l.dataset.label < n));
+        progressFill.style.width = ((n / total) * 100) + '%';
+        btnBack.hidden = n === 1;
+        btnNext.hidden = n === total;
+        btnSubmit.hidden = n !== total;
+        current = n;
+        const card = form.closest('.diag-form-card');
+        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      };
+
+      const validateCurrentStep = () => {
+        const step = form.querySelector(`.form-step[data-step="${current}"]`);
+        const required = step.querySelectorAll('[required]');
+        let valid = true;
+        required.forEach((field) => {
+          field.classList.remove('invalid');
+          if (field.type === 'radio') {
+            const group = form.querySelectorAll(`[name="${field.name}"]`);
+            const checked = Array.from(group).some((r) => r.checked);
+            if (!checked) {
+              valid = false;
+              group.forEach((r) => r.closest('.radio-row')?.classList.add('invalid'));
+            }
+          } else if (!field.value.trim()) {
+            valid = false;
+            field.classList.add('invalid');
+          }
+        });
+        return valid;
+      };
+
+      btnNext.addEventListener('click', () => {
+        if (validateCurrentStep() && current < total) showStep(current + 1);
+      });
+
+      btnBack.addEventListener('click', () => {
+        if (current > 1) showStep(current - 1);
+      });
+
+      // Condicional: mostrar detalhes de ads se "sim"
+      form.querySelectorAll('input[name="anuncia"]').forEach((r) => {
+        r.addEventListener('change', () => {
+          adsDetail.hidden = r.value !== 'sim' || !r.checked;
+        });
+      });
+
+      // Limpar visual de erro ao digitar
+      form.addEventListener('input', (e) => {
+        if (e.target.classList) e.target.classList.remove('invalid');
+        e.target.closest('.radio-row')?.classList.remove('invalid');
+      });
+
+      // ========================================
+      // CONFIGURAÇÃO — endpoint do Apps Script
+      // ========================================
+      // Substitua a URL abaixo pelo deployment ID do seu Apps Script (ver INTEGRACAO-LEADS.md)
+      // Enquanto não estiver configurado, o lead é salvo apenas no localStorage local.
+      const LEAD_ENDPOINT = ''; // ex: 'https://script.google.com/macros/s/AKfycb.../exec'
+      const LEAD_SECRET = '';   // mesmo valor configurado no Apps Script
+
+      // Gera UUID (para deduplicação com Meta CAPI)
+      const genEventId = () => {
+        if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+          const r = Math.random() * 16 | 0;
+          return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+      };
+
+      // Submit
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!validateCurrentStep()) return;
+
+        const fd = new FormData(form);
+        const formFields = {};
+        for (const [k, v] of fd.entries()) {
+          if (formFields[k]) formFields[k] = [].concat(formFields[k], v);
+          else formFields[k] = v;
+        }
+
+        // Carrega tracking salvo na sessão
+        let tracking = {};
+        try { tracking = JSON.parse(sessionStorage.getItem('dros_tracking') || '{}'); } catch (_) {}
+
+        // Monta payload completo
+        const payload = {
+          // identificação do evento (deduplicação CAPI)
+          event_id: genEventId(),
+          event_name: 'Lead',
+          event_source: 'dros-sales-website',
+          submitted_at: new Date().toISOString(),
+          time_on_page_seconds: tracking.session_start
+            ? Math.round((Date.now() - tracking.session_start) / 1000)
+            : null,
+
+          // contexto da página
+          current_page: location.href,
+          page_title: document.title,
+          landing_page: tracking.landing_page || location.href,
+          referrer: tracking.referrer || document.referrer || '',
+          traffic_type: tracking.traffic_type || '',
+
+          // UTMs
+          utm_source: tracking.utm_source || '',
+          utm_medium: tracking.utm_medium || '',
+          utm_campaign: tracking.utm_campaign || '',
+          utm_term: tracking.utm_term || '',
+          utm_content: tracking.utm_content || '',
+          utm_id: tracking.utm_id || '',
+
+          // Click IDs (todos os principais)
+          fbclid: tracking.fbclid || '',
+          gclid: tracking.gclid || '',
+          gbraid: tracking.gbraid || '',
+          wbraid: tracking.wbraid || '',
+          ttclid: tracking.ttclid || '',
+          li_fat_id: tracking.li_fat_id || '',
+          msclkid: tracking.msclkid || '',
+          twclid: tracking.twclid || '',
+          epik: tracking.epik || '',
+          sccid: tracking.ScCid || '',
+
+          // Cookies de pixel (Meta CAPI / GA)
+          fbp: tracking._fbp || '',
+          fbc: tracking._fbc || '',
+          ga: tracking._ga || '',
+          ga_client_id: tracking._ga_cid || '',
+
+          // Contexto do device
+          user_agent: navigator.userAgent,
+          language: navigator.language || '',
+          timezone: (Intl.DateTimeFormat().resolvedOptions().timeZone) || '',
+          screen: (screen.width || '') + 'x' + (screen.height || ''),
+          viewport: (window.innerWidth || '') + 'x' + (window.innerHeight || ''),
+
+          // Dados do formulário
+          nome: formFields.nome || '',
+          empresa: formFields.empresa || '',
+          whatsapp: formFields.whatsapp || '',
+          segmento: formFields.segmento || '',
+          faturamento: formFields.faturamento || '',
+          expansao: formFields.expansao || '',
+          anuncia: formFields.anuncia || '',
+          plataformas: Array.isArray(formFields.plataformas)
+            ? formFields.plataformas.join(', ')
+            : (formFields.plataformas || ''),
+          investimento: formFields.investimento || '',
+
+          // Autenticação (definida no Apps Script)
+          _secret: LEAD_SECRET,
+        };
+
+        // Backup local (sempre, mesmo que o envio falhe)
+        try {
+          const list = JSON.parse(localStorage.getItem('dros_diag_submissions') || '[]');
+          list.push(payload);
+          localStorage.setItem('dros_diag_submissions', JSON.stringify(list));
+        } catch (_) {}
+
+        // Envia pro Apps Script (Google Sheets)
+        // Os disparos de eventos (Meta CAPI, Google) são feitos pelo CRM
+        // depois que o lead avança no funil. Aqui só persistimos o registro completo.
+        if (LEAD_ENDPOINT) {
+          fetch(LEAD_ENDPOINT, {
+            method: 'POST',
+            mode: 'no-cors', // Apps Script não envia CORS headers — fire-and-forget
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload),
+          }).catch(() => { /* ignora — backup local já feito */ });
+        }
+
+        form.style.display = 'none';
+        document.querySelector('.form-progress').style.display = 'none';
+        success.hidden = false;
+        success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    })();
+  </script>
+
+</body>
+</html>
