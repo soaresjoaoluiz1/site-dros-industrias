@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Página de conversão — não indexar
+Disallow: /obrigado.html
+
+# Sitemap
+Sitemap: https://drosagencia.com.br/industria/sitemap.xml
