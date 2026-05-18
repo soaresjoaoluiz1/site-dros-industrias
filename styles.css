@@ -1638,13 +1638,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .eyebrow { font-size: 11px; margin-bottom: 14px; }
   .body-text { font-size: 0.95rem; }
 
-  /* Nav */
+  /* Nav — logo centralizado e maior no mobile */
   .nav-inner {
     padding: 14px 0;
     gap: 12px;
     flex-wrap: nowrap;
+    justify-content: center;
   }
-  .nav-logo .logo-img { height: 44px; }
+  .nav-logo .logo-img { height: 64px; }
   .nav-links { display: none; }
   /* Esconde CTA gigante do header em mobile — CTAs aparecem dentro do hero/cta-final/footer */
   .nav-inner > .btn--primary { display: none; }
@@ -1744,7 +1745,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   /* Footer */
   .footer { padding: 48px 0 24px; }
   .footer-grid { grid-template-columns: 1fr; gap: 32px; margin-bottom: 32px; }
-  .footer-brand .nav-logo .logo-img { height: 44px; }
+  .footer-brand .nav-logo .logo-img { height: 80px; }
   .footer-bottom { flex-direction: column; align-items: flex-start; gap: 12px; }
   .footer-contact .btn { width: 100%; }
 
