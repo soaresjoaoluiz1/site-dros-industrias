@@ -26,9 +26,9 @@
 // ============================================
 // CONFIGURAÇÃO
 // ============================================
-const SECRET = 'troque-isso-por-uma-string-aleatoria-e-cole-no-diagnostico-html';
-const SHEET_NAME = 'Leads';
-const NOTIFY_EMAIL = ''; // Opcional: email para receber notificação de novo lead. Deixe vazio pra desligar.
+const SECRET = 'dros-leads-2026-9bK4Tx7QmR2pYz8WfA3H'; // já configurado no diagnostico.html
+const SHEET_NAME = 'INDUSTRIA DIAGNÓSTICO';            // aba da planilha "ENTRADA DE LEADS | DROS AGÊNCIA"
+const NOTIFY_EMAIL = '';                                // Opcional: email pra notificação. Deixe vazio pra desligar.
 
 // ============================================
 // Ordem das colunas (cabeçalho)

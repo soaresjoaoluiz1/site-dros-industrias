@@ -440,10 +440,11 @@
       // ========================================
       // CONFIGURAÇÃO — endpoint do Apps Script
       // ========================================
-      // Substitua a URL abaixo pelo deployment ID do seu Apps Script (ver INTEGRACAO-LEADS.md)
-      // Enquanto não estiver configurado, o lead é salvo apenas no localStorage local.
+      // 1) Cole a URL `/exec` do Apps Script implantado (ver INTEGRACAO-LEADS.md).
+      // 2) O SECRET já está pré-configurado (igual ao do apps-script-leads.gs).
+      // Enquanto LEAD_ENDPOINT estiver vazio, o lead vai só pro localStorage local.
       const LEAD_ENDPOINT = ''; // ex: 'https://script.google.com/macros/s/AKfycb.../exec'
-      const LEAD_SECRET = '';   // mesmo valor configurado no Apps Script
+      const LEAD_SECRET = 'dros-leads-2026-9bK4Tx7QmR2pYz8WfA3H';
 
       // Gera UUID (para deduplicação com Meta CAPI)
       const genEventId = () => {
