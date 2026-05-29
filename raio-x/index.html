@@ -1,213 +1,459 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Raio X Comercial — DROS</title>
-  <meta name="description" content="Indústria que vende. Canal não é sorte.">
-  <meta name="theme-color" content="#1A1611">
-  <meta name="robots" content="noindex, follow">
-  <link rel="canonical" href="https://drosagencia.com.br/industria/raio-x/">
-
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-      width: 100%; height: 100%;
-      overflow: hidden;
-      background: #1a1611;
-      font-family: 'Inter', system-ui, sans-serif;
-      -webkit-font-smoothing: antialiased;
-    }
-    .stage {
-      position: fixed; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      padding: 60px 24px 90px;
-    }
-    .frame {
-      position: relative;
-      width: 1080px; height: 1350px;
-      max-width: 100%;
-      transform-origin: center center;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-    .slide-iframe {
-      width: 1080px; height: 1350px;
-      border: 0;
-      display: block;
-    }
-
-    .nav-btn {
-      position: fixed;
-      top: 50%; transform: translateY(-50%);
-      width: 52px; height: 52px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.20);
-      color: #fff;
-      cursor: pointer;
-      display: inline-flex; align-items: center; justify-content: center;
-      font-size: 22px;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      transition: all 0.2s ease;
-      z-index: 10;
-    }
-    .nav-btn:hover {
-      background: rgba(255,255,255,0.18);
-      border-color: rgba(255,255,255,0.32);
-    }
-    .nav-btn:disabled {
-      opacity: 0.25; cursor: not-allowed;
-    }
-    .nav-prev { left: 24px; }
-    .nav-next { right: 24px; }
-
-    .dots {
-      position: fixed;
-      bottom: 28px; left: 50%; transform: translateX(-50%);
-      display: flex; gap: 8px;
-      z-index: 10;
-      padding: 10px 16px;
-      background: rgba(0,0,0,0.35);
-      border-radius: 100px;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-    }
-    .dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.30);
-      cursor: pointer;
-      transition: all 0.25s ease;
-      border: 0;
-      padding: 0;
-    }
-    .dot.is-active {
-      background: #C9A961;
-      width: 28px;
-      border-radius: 100px;
-    }
-
-    .counter {
-      position: fixed;
-      top: 24px; left: 24px;
-      font-family: 'Inter', sans-serif;
-      font-size: 11px; letter-spacing: 0.24em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.6);
-      font-weight: 600;
-      z-index: 10;
-    }
-    .counter strong { color: #C9A961; font-weight: 700; }
-
-    .home-link {
-      position: fixed;
-      top: 24px; right: 24px;
-      font-family: 'Inter', sans-serif;
-      font-size: 11px; letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.6);
-      font-weight: 600;
-      text-decoration: none;
-      z-index: 10;
-      transition: color 0.2s ease;
-    }
-    .home-link:hover { color: #fff; }
-
-    /* Responsive scale of the fixed-size frame */
-    @media (max-width: 1140px) {
-      .frame { transform: scale(calc((100vw - 140px) / 1080)); }
-    }
-    @media (max-width: 720px) {
-      .stage { padding: 70px 20px 90px; }
-      .frame { transform: scale(calc((100vw - 40px) / 1080)); }
-      .nav-btn { width: 42px; height: 42px; font-size: 18px; }
-      .nav-prev { left: 8px; }
-      .nav-next { right: 8px; }
-    }
-
-    /* Fade transition between slides */
-    .frame { transition: opacity 0.28s ease; }
-    .frame.is-changing { opacity: 0; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DROS Sales · Raio-X Comercial da Indústria</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+  :root{
+    --bg:#0a0e15; --bg2:#0f1622; --card:#141c2a; --line:#202c3e;
+    --gold:#f5b50a; --gold2:#ffce4d; --white:#f3f6fb; --mut:#8593a8; --mut2:#5d6a7e;
+    --green:#34c98a; --red:#e8604c; --amber:#f3a826; --blue:#5b9cf0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--white);min-height:100vh}
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px}
+  header{display:flex;justify-content:space-between;align-items:center;padding:24px 0 8px}
+  .logo{display:flex;align-items:center;gap:10px}
+  .logo-mark{width:34px;height:34px;border-radius:9px;background:var(--gold);color:#000;font-weight:800;display:grid;place-items:center;font-size:15px}
+  .fade{animation:f .45s ease both}
+  @keyframes f{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .bar{transition:width .6s cubic-bezier(.2,.8,.2,1)}
+  .btn{transition:transform .14s,box-shadow .2s,background .2s,border-color .2s;cursor:pointer}
+  .btn:hover{transform:translateY(-2px)}
+  .opt:hover{border-color:var(--gold)!important;background:var(--bg2)!important}
+  .num:hover{transform:scale(1.07)}
+  input.inp{background:var(--bg2);border:1px solid var(--line);color:var(--white);border-radius:12px;padding:16px;font-size:20px;font-weight:700;width:100%;outline:none;font-family:inherit}
+  input.inp:focus{border-color:var(--gold)}
+  footer{text-align:center;color:var(--mut2);font-size:12px;padding:44px 0 28px;border-top:1px solid var(--line);margin-top:50px}
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:640px){.twocol{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
+<div id="root"></div>
 
-  <div class="counter">Slide <strong id="current">1</strong> / <span id="total">7</span></div>
-  <a href="/" class="home-link">← drosagencia.com.br</a>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
 
-  <main class="stage">
-    <div class="frame" id="frame">
-      <iframe id="slide" class="slide-iframe" src="slide-1.html" loading="eager" title="Slide 1"></iframe>
-    </div>
-  </main>
+<script type="text/babel">
+const {useState, useMemo, useRef, useEffect} = React;
+const e = React.createElement;
 
-  <button class="nav-btn nav-prev" id="btnPrev" aria-label="Anterior">‹</button>
-  <button class="nav-btn nav-next" id="btnNext" aria-label="Próximo">›</button>
+// ======= CONFIG QUE VOCÊ PODE TROCAR =======
+const CONTATO = {
+  ctaLink: "/industria/diagnostico.html?from=raio-x",
+  precoBase: 5000,
+  verbaAnuncio: 1500,
+};
 
-  <div class="dots" id="dots"></div>
+const C = {
+  bg:"#0a0e15", bg2:"#0f1622", card:"#141c2a", line:"#202c3e",
+  gold:"#f5b50a", gold2:"#ffce4d", white:"#f3f6fb", mut:"#8593a8", mut2:"#5d6a7e",
+  green:"#34c98a", red:"#e8604c", amber:"#f3a826", blue:"#5b9cf0",
+};
 
-  <script>
-    const TOTAL = 7;
-    let current = 1;
+const BENCH = { investPctIdeal:8, investPctMin:5, novosIdealPct:4, dependenciaMax:30, indicacaoMax:50, followupIdeal:70 };
 
-    const frame = document.getElementById('frame');
-    const slide = document.getElementById('slide');
-    const counter = document.getElementById('current');
-    const btnPrev = document.getElementById('btnPrev');
-    const btnNext = document.getElementById('btnNext');
-    const dotsContainer = document.getElementById('dots');
+const FAT_FAIXAS = [
+  {label:"Até R$ 50 mil/mês", v:35000},
+  {label:"R$ 50 mil a R$ 150 mil", v:100000},
+  {label:"R$ 150 mil a R$ 500 mil", v:325000},
+  {label:"R$ 500 mil a R$ 1 milhão", v:750000},
+  {label:"R$ 1 mi a R$ 3 mi", v:2000000},
+  {label:"Acima de R$ 3 milhões", v:4000000},
+];
+const SETORES = ["Embalagens / Papel","Químico","Alimentos / Bebidas","Metalúrgica","Plásticos","Cosméticos","Vidraçaria / Vidros","Automotivo / Autopeças","Outro segmento industrial"];
 
-    document.getElementById('total').textContent = TOTAL;
+const NAOSEI = "__NS__";
 
-    // build dots
-    for (let i = 1; i <= TOTAL; i++) {
-      const d = document.createElement('button');
-      d.className = 'dot' + (i === 1 ? ' is-active' : '');
-      d.dataset.idx = i;
-      d.setAttribute('aria-label', 'Ir para slide ' + i);
-      d.addEventListener('click', () => goTo(i));
-      dotsContainer.appendChild(d);
-    }
+const STEPS = [
+  {block:"Sua empresa", id:"setor", type:"select", q:"Qual o segmento da sua indústria?", help:"Pra comparar você com empresas parecidas.", options:SETORES},
+  {block:"Sua empresa", id:"tempo", type:"faixa", q:"Há quanto tempo a empresa existe?", help:"", canNS:false, options:[{label:"Menos de 2 anos",v:1},{label:"2 a 5 anos",v:3},{label:"5 a 10 anos",v:7},{label:"Mais de 10 anos",v:12}]},
+  {block:"Sua empresa", id:"entrega", type:"faixa", q:"Você tem entrega própria?", help:"Logística costuma ser um argumento de venda forte.", canNS:false, options:[{label:"Sim, frota própria",v:2},{label:"Terceirizo",v:1},{label:"Não entrego",v:0}]},
+  {block:"Sua empresa", id:"redes", type:"multi", q:"Tem redes sociais? Quais usa hoje?", help:"Marque todas. Se não tiver, marque a última.", options:["Instagram","Facebook","LinkedIn","TikTok","WhatsApp Business","Não tenho / parado"]},
+  {block:"Sua experiência digital", id:"jatentou", type:"faixa", q:"Você já tentou o digital pra vender antes?", help:"Sem julgamento — só pra entender de onde você parte.", canNS:false, options:[{label:"Nunca tentei",v:0},{label:"Tenho, mas está parado",v:1},{label:"Tentei e parei",v:2},{label:"Faço hoje",v:3}]},
+  {block:"Sua experiência digital", id:"dificuldade", type:"faixa", q:"Qual foi a maior dificuldade quando tentou?", help:"O que mais te travou.", showIf:(a)=>a.jatentou===1||a.jatentou===2||a.jatentou===3, canNS:false, options:[{label:"Não veio cliente nenhum",v:1},{label:"Veio cliente errado",v:2},{label:"Não soube medir o resultado",v:3},{label:"Faltou tempo / equipe",v:4},{label:"Gastei e não tive retorno",v:5}]},
+  {block:"Seus números", id:"fatFaixa", type:"faixa", q:"Quanto a empresa fatura por mês, em média?", help:"Escolha a faixa mais próxima. Fica entre a gente.", options:FAT_FAIXAS},
+  {block:"Seus números", id:"ticket", type:"numero", q:"Qual o valor médio de um pedido (ticket médio)?", help:"Se não souber exato, estime — ou marque 'não sei dizer'.", prefix:"R$", placeholder:"ex: 2500"},
+  {block:"Seus números", id:"clientesAtivos", type:"numero", q:"Quantos clientes ativos você tem hoje?", help:"Clientes que compraram nos últimos meses.", placeholder:"ex: 80"},
+  {block:"Seus números", id:"novosMes", type:"numero", q:"Quantos clientes NOVOS entram, em média, por mês?", help:"Que nunca tinham comprado. Pode ser 0.", placeholder:"ex: 3"},
+  {block:"Dinheiro e dependência", id:"topClientesPct", type:"faixa", q:"Quanto do faturamento vem dos seus 5 maiores clientes?", help:"Aquele 'se esse sai, complica' — o quanto pesa?", options:[{label:"Menos de 20%",v:15},{label:"20% a 40%",v:30},{label:"40% a 60%",v:50},{label:"Mais de 60%",v:70}]},
+  {block:"Dinheiro e dependência", id:"indicacaoPct", type:"faixa", q:"Dos clientes novos, quanto vem de indicação?", help:"Indicação é ótima — mas depender só dela tira previsibilidade.", options:[{label:"Menos de 30%",v:20},{label:"30% a 60%",v:45},{label:"60% a 90%",v:75},{label:"Quase tudo",v:95}]},
+  {block:"Dinheiro e dependência", id:"investe", type:"faixa", q:"Quanto investe por mês pra atrair clientes novos?", help:"Anúncios, comercial ativo, prospecção.", options:[{label:"Praticamente nada",v:0},{label:"Até R$ 1 mil",v:800},{label:"R$ 1 mil a R$ 5 mil",v:3000},{label:"R$ 5 mil a R$ 15 mil",v:9000},{label:"Mais de R$ 15 mil",v:20000}]},
+  {block:"Como você vende hoje", id:"canais", type:"multi", q:"Como sua empresa traz clientes hoje?", help:"Marque tudo que realmente traz pedido.", noNS:true, options:["Indicação / boca a boca","Representante comercial","Vendedor externo","Clientes antigos recomprando","Anúncios (Meta / Google)","Instagram / redes sociais","Site / busca no Google","Feiras e eventos","Prospecção ativa (WhatsApp/ligação)"]},
+  {block:"Como você vende hoje", id:"crm", type:"escala", q:"Você sabe em que pé está cada negociação aberta?", help:"0 = está tudo na cabeça/caderno · 10 = controlo num sistema", area:"gestao"},
+  {block:"Como você vende hoje", id:"followup", type:"faixa", q:"Quem pede orçamento e não fecha na hora, recebe retorno?", help:"O famoso 'ficou de ver e sumiu'.", options:[{label:"Quase nunca",v:10},{label:"Às vezes, sem padrão",v:40},{label:"Na maioria das vezes",v:70},{label:"Sempre, é processo",v:95}]},
+  {block:"Como você vende hoje", id:"conversao", type:"faixa", q:"De cada 10 orçamentos, quantos viram pedido?", help:"Sua taxa de fechamento, mais ou menos.", options:[{label:"Menos de 1",v:8},{label:"2 a 3",v:25},{label:"4 a 5",v:45},{label:"6 ou mais",v:65}]},
+  {block:"Maturidade comercial", id:"prev1", type:"escala", q:"No começo do mês, você prevê quanto vai vender?", help:"0 = é sempre surpresa · 10 = previsão confiável", area:"prev"},
+  {block:"Maturidade comercial", id:"novos1", type:"escala", q:"Consegue abrir uma região nova quando decide?", help:"0 = não sei por onde começar · 10 = tenho método", area:"novos"},
+  {block:"Maturidade comercial", id:"proc1", type:"escala", q:"Existe um processo igual do contato ao pedido?", help:"0 = cada venda é de um jeito · 10 = processo seguido", area:"proc"},
+  {block:"Maturidade comercial", id:"digital1", type:"escala", q:"O digital te traz pedido de verdade?", help:"0 = perfil parado · 10 = gera pedido real", area:"digital"},
+  {block:"Maturidade comercial", id:"cresce1", type:"escala", q:"A empresa cresce constante ou vive de altos e baixos?", help:"0 = montanha-russa · 10 = crescimento constante", area:"prev"},
+];
 
-    function goTo(n) {
-      if (n < 1 || n > TOTAL || n === current) return;
-      current = n;
-      frame.classList.add('is-changing');
-      setTimeout(() => {
-        slide.src = 'slide-' + n + '.html';
-        slide.setAttribute('title', 'Slide ' + n);
-        frame.classList.remove('is-changing');
-      }, 200);
-      counter.textContent = n;
-      document.querySelectorAll('.dot').forEach((d, i) => {
-        d.classList.toggle('is-active', i + 1 === n);
-      });
-      btnPrev.disabled = n === 1;
-      btnNext.disabled = n === TOTAL;
-    }
+const AREAS = { prev:"Previsibilidade comercial", novos:"Entrada de novos clientes", proc:"Processo comercial", digital:"Digital como canal de vendas", gestao:"Gestão e acompanhamento" };
 
-    btnPrev.addEventListener('click', () => goTo(current - 1));
-    btnNext.addEventListener('click', () => goTo(current + 1));
+function avg(arr){const v=arr.filter(x=>!isNaN(x));return v.length?v.reduce((s,x)=>s+x,0)/v.length:0;}
+function scaleFn(val,from,to){if(to===from)return 5;const t=(val-from)/(to-from);return Math.max(0,Math.min(10,t*10));}
+function lvl(s){return s<4?"baixo":s<7?"medio":"alto";}
+function brl(n){if(!isFinite(n))return"—";return n.toLocaleString("pt-BR",{style:"currency",currency:"BRL",maximumFractionDigits:0});}
+function isNum(v){return v!==undefined&&v!==null&&v!==""&&v!==NAOSEI&&!isNaN(Number(v));}
+function val(a,id){const v=a[id];return v===NAOSEI||v===undefined?null:v;}
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goTo(current + 1); }
-      if (e.key === 'ArrowLeft')  { e.preventDefault(); goTo(current - 1); }
-    });
+function analyze(a){
+  const fat=val(a,"fatFaixa")||0;
+  const ticket=isNum(a.ticket)?Number(a.ticket):0;
+  const clientes=isNum(a.clientesAtivos)?Number(a.clientesAtivos):0;
+  const novosMes=isNum(a.novosMes)?Number(a.novosMes):0;
+  const top=val(a,"topClientesPct");
+  const indic=val(a,"indicacaoPct");
+  const investe=val(a,"investe");
+  const followup=val(a,"followup");
+  const conv=val(a,"conversao");
+  const canais=a.canais||[];
 
-    // swipe (mobile)
-    let startX = 0;
-    document.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
-    document.addEventListener('touchend', (e) => {
-      const dx = e.changedTouches[0].clientX - startX;
-      if (Math.abs(dx) < 40) return;
-      if (dx < 0) goTo(current + 1);
-      else        goTo(current - 1);
-    }, { passive: true });
+  const chaves=["ticket","clientesAtivos","novosMes","topClientesPct","indicacaoPct","investe","followup","conversao"];
+  let naoSabe=0;
+  chaves.forEach(k=>{const v=a[k];if(v===NAOSEI||v===undefined||v===""){naoSabe++;}});
+  const controleScore=Math.max(0,10-(naoSabe/chaves.length)*10);
 
-    btnPrev.disabled = true;
-  </script>
+  const investPct=(fat>0&&investe!=null)?(investe/fat)*100:null;
+  const entradaPct=clientes>0?(novosMes/clientes)*100:null;
+  const canaisProprios=canais.filter(c=>["Anúncios (Meta / Google)","Site / busca no Google","Prospecção ativa (WhatsApp/ligação)","Instagram / redes sociais"].includes(c)).length;
+
+  const esc=id=>a[id]!=null&&a[id]!==NAOSEI?a[id]:5;
+  const areaScores={
+    prev: avg([esc("prev1"),esc("cresce1"),top!=null?scaleFn(top,70,15):NaN,indic!=null?scaleFn(indic,95,20):NaN]),
+    novos: avg([esc("novos1"),entradaPct!=null?scaleFn(entradaPct,0,5):NaN,scaleFn(canaisProprios,0,3)]),
+    proc: avg([esc("proc1"),conv!=null?scaleFn(conv,8,65):NaN,followup!=null?scaleFn(followup,10,95):NaN]),
+    digital: avg([esc("digital1"),scaleFn(canaisProprios,0,4)]),
+    gestao: avg([esc("crm"),followup!=null?scaleFn(followup,10,95):NaN]),
+  };
+  const overall=avg(Object.values(areaScores));
+
+  const benchmarks=[];
+  if(investPct!=null) benchmarks.push({k:"Investimento em captação",you:investPct.toFixed(1)+"% do faturamento",market:BENCH.investPctMin+"–"+BENCH.investPctIdeal+"% (indústria B2B)",status:investPct>=BENCH.investPctMin?(investPct>=BENCH.investPctIdeal?"ok":"warn"):"bad",note:investPct<BENCH.investPctMin?"Abaixo do mínimo que indústrias que crescem praticam.":investPct<BENCH.investPctIdeal?"Investe, mas ainda abaixo de quem escala.":"Em linha com quem cresce de forma consistente."});
+  if(top!=null) benchmarks.push({k:"Dependência dos maiores clientes",you:top+"% nos 5 maiores",market:"ideal abaixo de "+BENCH.dependenciaMax+"%",status:top<=BENCH.dependenciaMax?"ok":top<=50?"warn":"bad",note:top>50?"Risco alto: se um cliente grande sai, o mês quebra.":top>BENCH.dependenciaMax?"Concentração acima do saudável.":"Base bem distribuída."});
+  if(indic!=null) benchmarks.push({k:"Dependência de indicação",you:indic+"% dos novos",market:"ideal abaixo de "+BENCH.indicacaoMax+"%",status:indic<=BENCH.indicacaoMax?"ok":indic<=75?"warn":"bad",note:indic>75?"Refém de indicação: não controla quando entra cliente.":indic>BENCH.indicacaoMax?"Indicação manda demais — falta canal próprio.":"Não depende só de indicação. Bom sinal."});
+  if(entradaPct!=null) benchmarks.push({k:"Entrada de clientes novos",you:entradaPct.toFixed(1)+"% da base/mês",market:"~"+BENCH.novosIdealPct+"% ao mês",status:entradaPct>=4?"ok":entradaPct>=2?"warn":"bad",note:entradaPct<2?"Entrada muito baixa — a base não renova.":entradaPct<4?"Entra devagar pro tamanho da operação.":"Boa renovação da base."});
+  if(followup!=null) benchmarks.push({k:"Acompanhamento de quem não fechou",you:followup+"% recebem retorno",market:"ideal acima de "+BENCH.followupIdeal+"%",status:followup>=BENCH.followupIdeal?"ok":followup>=40?"warn":"bad",note:followup<40?"Perde venda que já estava na mão.":followup<BENCH.followupIdeal?"Follow-up sem padrão — escapa venda.":"Quase todo contato é trabalhado."});
+
+  const novosAlvo=Math.max(novosMes,Math.ceil((clientes||0)*0.04));
+  const ganhoNovos=Math.max(0,novosAlvo-novosMes);
+  const convAtual=conv!=null?conv:20;
+  const convAlvo=Math.min(convAtual+10,50);
+  const upliftConv=convAtual>0?(convAlvo-convAtual)/convAtual:0;
+  const receitaNovos=ganhoNovos*ticket;
+  const fatBase=fat||clientes*ticket;
+  const ganhoConv=fatBase*upliftConv*0.3;
+  const ganhoFollow=(followup!=null&&followup<BENCH.followupIdeal)?fatBase*0.05:0;
+  const ganhoMensal=receitaNovos+ganhoConv+ganhoFollow;
+
+  const ranked=Object.keys(areaScores).map(k=>({key:k,name:AREAS[k],score:areaScores[k]})).sort((x,y)=>x.score-y.score);
+
+  return {overall,areaScores,ranked,benchmarks,controleScore,naoSabe,totalChaves:chaves.length,
+    proj:{ganhoMensal,ganhoAnual:ganhoMensal*12,ganhoNovos,novosAlvo,convAtual,convAlvo,receitaNovos,ganhoConv,ganhoFollow,ticket,hasData:ticket>0&&(clientes>0||fat>0)}};
+}
+
+const PLANO={
+  prev:{baixo:"Diluir a dependência de poucos clientes e criar entrada constante de demanda.",medio:"Equilibrar a carteira e instalar meta mensal por canal pra prever o mês.",alto:"Usar a previsão pra planejar crescimento por região/segmento."},
+  novos:{baixo:"Criar um canal próprio que traz cliente novo todo mês (anúncio + comercial ativo).",medio:"Estruturar geração de demanda mirando o comprador certo, na região certa.",alto:"Escalar a aquisição abrindo novas regiões com método replicável."},
+  proc:{baixo:"Definir um processo único do contato ao pedido — pra venda não depender da pessoa.",medio:"Padronizar atendimento e implantar follow-up de quem não fechou.",alto:"Otimizar etapas e subir a conversão com ajustes finos."},
+  digital:{baixo:"Transformar o digital de perfil parado em canal que gera pedido.",medio:"Conectar posicionamento e anúncios ao comercial, mirando quem compra.",alto:"Integrar dados de campanha ao CRM pra investir só no que vira pedido."},
+  gestao:{baixo:"Implantar um CRM simples pra enxergar cada negociação e parar de perder venda.",medio:"Acompanhar indicadores em tempo real e cobrar etapas do funil.",alto:"Usar os dados pra decidir crescimento com segurança."},
+};
+
+function App(){
+  const [stage,setStage]=useState("intro");
+  const [answers,setAnswers]=useState({});
+  const [i,setI]=useState(0);
+  const top=useRef(null);
+
+  const visible=useMemo(()=>STEPS.filter(s=>!s.showIf||s.showIf(answers)),[answers]);
+  const total=visible.length;
+  const step=visible[i];
+
+  useEffect(()=>{if(top.current)top.current.scrollIntoView({behavior:"smooth",block:"start"});},[stage,i]);
+  const set=(id,v)=>setAnswers(a=>({...a,[id]:v}));
+
+  const answered=(()=>{
+    if(!step)return false;
+    const v=answers[step.id];
+    if(step.type==="multi")return Array.isArray(v)&&v.length>0;
+    if(step.type==="numero")return v===NAOSEI||isNum(v);
+    return v!==undefined&&v!==null;
+  })();
+
+  const result=useMemo(()=>analyze(answers),[answers]);
+
+  return e("div",{ref:top,style:{minHeight:"100vh"}},
+    e("div",{className:"wrap"},
+      e("header",null,
+        e("div",{className:"logo"},
+          e("div",{className:"logo-mark"},"D"),
+          e("span",{style:{fontWeight:800,fontSize:15}},"DROS ",e("span",{style:{color:C.mut,fontWeight:600}},"SALES"))
+        ),
+        e("span",{style:{fontSize:12,color:C.mut,fontWeight:600}},"Raio-X Comercial · Gratuito")
+      ),
+      stage==="intro"&&e(Intro,{total,onStart:()=>{setI(0);setStage("quiz");}}),
+      stage==="quiz"&&e(Quiz,{step,i,total,value:answers[step.id],answered,
+        onSet:v=>set(step.id,v),
+        onNext:()=>{i<total-1?setI(i+1):setStage("result");},
+        onPrev:()=>i>0&&setI(i-1)}),
+      stage==="result"&&e(Result,{r:result,a:answers,onRestart:()=>{setAnswers({});setI(0);setStage("intro");}}),
+      e("footer",null,"DROS Sales · Canal de vendas para indústria vender mais. · Diagnóstico gratuito e sem compromisso.")
+    )
+  );
+}
+
+function Intro({total,onStart}){
+  const blocks=[["Seus números","Faturamento, ticket, clientes e novos."],["Sua dependência","Quanto pesa indicação e os maiores clientes."],["Seus canais","Como você traz cliente e o que dá pedido."],["Sua maturidade","Previsibilidade, processo e gestão."]];
+  return e("section",{className:"fade",style:{padding:"38px 0 10px"}},
+    e("span",{style:{fontSize:12,fontWeight:700,letterSpacing:2,color:C.gold,textTransform:"uppercase"}},"Raio-X comercial da indústria"),
+    e("h1",{style:{fontSize:"clamp(34px,6vw,56px)",lineHeight:1.04,fontWeight:800,letterSpacing:-1,margin:"16px 0 18px"}},"Sua empresa cresce",e("br"),"ou só ",e("span",{style:{color:C.gold}},"trabalha mais?")),
+    e("p",{style:{fontSize:"clamp(16px,2.4vw,19px)",color:C.mut,maxWidth:640,lineHeight:1.55,margin:"0 0 12px"}},"Responda perguntas simples sobre o dia a dia da sua operação e receba um diagnóstico real: como você está ",e("b",{style:{color:C.white}},"comparado à média do setor"),", onde está travando e ",e("b",{style:{color:C.white}},"quanto dá pra destravar")," em faturamento."),
+    e("p",{style:{fontSize:14,color:C.mut2,margin:"0 0 30px"}},"Não sabe algum número? Sem problema — tem a opção \"não sei dizer\", e isso também faz parte da análise."),
+    e("button",{onClick:onStart,className:"btn",style:{background:C.gold,color:"#000",border:"none",borderRadius:12,padding:"16px 30px",fontSize:16,fontWeight:800,boxShadow:"0 12px 30px -8px "+C.gold+"66"}},"Começar meu raio-X →"),
+    e("p",{style:{fontSize:13,color:C.mut2,marginTop:14}},"~3 minutos · seus dados ficam entre você e a DROS"),
+    e("div",{style:{marginTop:42,display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))",gap:12}},
+      blocks.map((b,k)=>e("div",{key:k,style:{background:C.card,border:"1px solid "+C.line,borderRadius:16,padding:20}},
+        e("div",{style:{color:C.gold,fontWeight:800,fontSize:13,marginBottom:8}},String(k+1).padStart(2,"0")),
+        e("div",{style:{fontWeight:700,fontSize:16,marginBottom:6}},b[0]),
+        e("div",{style:{color:C.mut,fontSize:13.5,lineHeight:1.5}},b[1])
+      ))
+    )
+  );
+}
+
+function Quiz({step,i,total,value,answered,onSet,onNext,onPrev}){
+  const canNS=step.canNS!==false&&!step.noNS&&step.type!=="select"&&step.type!=="multi";
+  return e("section",{className:"fade",key:step.id,style:{padding:"18px 0 10px"}},
+    e("div",{style:{display:"flex",alignItems:"center",gap:14,marginBottom:26}},
+      e("div",{style:{flex:1,height:8,background:C.card,borderRadius:8,overflow:"hidden"}},
+        e("div",{className:"bar",style:{width:(i/total*100)+"%",height:"100%",background:"linear-gradient(90deg,"+C.gold+","+C.gold2+")"}})),
+      e("span",{style:{fontSize:13,color:C.mut,fontWeight:700,whiteSpace:"nowrap"}},(i+1)+"/"+total)
+    ),
+    e("span",{style:{fontSize:12,fontWeight:700,letterSpacing:1.5,color:C.gold,textTransform:"uppercase"}},step.block),
+    e("h2",{style:{fontSize:"clamp(22px,3.8vw,30px)",lineHeight:1.22,fontWeight:800,letterSpacing:-0.5,margin:"12px 0 8px"}},step.q),
+    step.help&&e("p",{style:{color:C.mut,fontSize:14,margin:"0 0 30px",lineHeight:1.5}},step.help),
+    step.type==="escala"&&e(Escala,{value,onSet}),
+    (step.type==="faixa"||step.type==="select")&&e(Opcoes,{options:step.options,value,type:step.type,onSet}),
+    step.type==="numero"&&e(Numero,{step,value,onSet}),
+    step.type==="multi"&&e(Multi,{options:step.options,value,onSet}),
+    canNS&&e("button",{onClick:()=>onSet(NAOSEI),className:"btn",style:{marginTop:16,background:value===NAOSEI?C.blue:"transparent",color:value===NAOSEI?"#000":C.mut,border:"1px dashed "+(value===NAOSEI?C.blue:C.line),borderRadius:11,padding:"12px 18px",fontSize:14,fontWeight:700,width:"100%"}}, value===NAOSEI?"✓ Não sei dizer (faz parte da análise)":"Não sei dizer / não controlo isso"),
+    e("div",{style:{display:"flex",gap:12,justifyContent:"space-between",marginTop:28}},
+      e("button",{onClick:onPrev,disabled:i===0,className:"btn",style:{background:"transparent",color:i===0?C.line:C.mut,border:"1px solid "+C.line,borderRadius:11,padding:"13px 22px",fontSize:15,fontWeight:700}},"← Voltar"),
+      e("button",{onClick:onNext,disabled:!answered,className:"btn",style:{background:answered?C.gold:C.card,color:answered?"#000":C.mut2,border:"none",borderRadius:11,padding:"13px 30px",fontSize:15,fontWeight:800,flex:1,maxWidth:320,cursor:answered?"pointer":"not-allowed",boxShadow:answered?"0 10px 24px -10px "+C.gold+"88":"none"}}, i===total-1?"Ver meu diagnóstico →":"Próxima →")
+    )
+  );
+}
+
+function Escala({value,onSet}){
+  return e("div",null,
+    e("div",{style:{display:"grid",gridTemplateColumns:"repeat(11,1fr)",gap:6,marginBottom:18}},
+      Array.from({length:11},(_,n)=>{const on=value===n;return e("button",{key:n,onClick:()=>onSet(n),className:"num btn",style:{aspectRatio:"1",borderRadius:10,border:"1px solid "+(on?C.gold:C.line),background:on?C.gold:C.card,color:on?"#000":C.white,fontWeight:800,fontSize:14}},n);})
+    ),
+    e("div",{style:{display:"flex",justifyContent:"space-between",fontSize:11.5,color:C.mut2,fontWeight:600}},
+      e("span",null,"0 · crítico"),e("span",null,"5 · parcial"),e("span",null,"10 · maduro"))
+  );
+}
+
+function Opcoes({options,value,type,onSet}){
+  return e("div",{style:{display:"grid",gap:10}},
+    options.map((o,k)=>{
+      const v=type==="select"?o:o.v, label=type==="select"?o:o.label, on=value===v;
+      return e("button",{key:k,onClick:()=>onSet(v),className:"opt btn",style:{textAlign:"left",background:on?C.gold:C.card,color:on?"#000":C.white,border:"1px solid "+(on?C.gold:C.line),borderRadius:12,padding:"16px 18px",fontSize:15.5,fontWeight:700,display:"flex",alignItems:"center",gap:12}},
+        e("span",{style:{width:20,height:20,borderRadius:"50%",border:"2px solid "+(on?"#000":C.mut2),display:"grid",placeItems:"center",flexShrink:0}}, on&&e("span",{style:{width:9,height:9,borderRadius:"50%",background:"#000"}})),
+        label);
+    })
+  );
+}
+
+function Numero({step,value,onSet}){
+  return e("div",{style:{display:"flex",alignItems:"center",gap:12,maxWidth:360}},
+    step.prefix&&e("span",{style:{fontSize:22,fontWeight:800,color:C.mut}},step.prefix),
+    e("input",{className:"inp",type:"number",inputMode:"numeric",placeholder:step.placeholder,value:value===NAOSEI?"":(value??""),onChange:ev=>onSet(ev.target.value)})
+  );
+}
+
+function Multi({options,value,onSet}){
+  const sel=Array.isArray(value)?value:[];
+  const toggle=o=>onSet(sel.includes(o)?sel.filter(x=>x!==o):[...sel,o]);
+  return e("div",{style:{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:10}},
+    options.map((o,k)=>{const on=sel.includes(o);return e("button",{key:k,onClick:()=>toggle(o),className:"opt btn",style:{textAlign:"left",background:on?C.gold+"1a":C.card,color:on?C.gold:C.white,border:"1px solid "+(on?C.gold:C.line),borderRadius:12,padding:"14px 16px",fontSize:14.5,fontWeight:700,display:"flex",alignItems:"center",gap:10}},
+      e("span",{style:{width:20,height:20,borderRadius:6,border:"2px solid "+(on?C.gold:C.mut2),display:"grid",placeItems:"center",flexShrink:0,background:on?C.gold:"transparent",color:"#000",fontSize:13,fontWeight:900}}, on?"✓":""),
+      o);})
+  );
+}
+
+function Result({r,a,onRestart}){
+  const pct=Math.round(r.overall/10*100);
+  const bandColor=r.overall<4?C.red:r.overall<7?C.amber:C.green;
+  const bandLabel=r.overall<4?"Comercial no improviso":r.overall<7?"Parcialmente estruturado":"Comercial maduro";
+  const statusColor=s=>s==="ok"?C.green:s==="warn"?C.amber:C.red;
+
+  return e("section",{className:"fade",style:{padding:"26px 0 10px"}},
+    e("span",{style:{fontSize:12,fontWeight:700,letterSpacing:2,color:C.gold,textTransform:"uppercase"}},"Seu raio-x comercial"),
+
+    e("div",{style:{display:"flex",gap:26,alignItems:"center",flexWrap:"wrap",margin:"18px 0 14px",background:C.card,border:"1px solid "+C.line,borderRadius:20,padding:26}},
+      e("div",{style:{width:144,height:144,borderRadius:"50%",background:"conic-gradient("+bandColor+" "+(pct*3.6)+"deg, "+C.bg2+" 0)",display:"grid",placeItems:"center",flexShrink:0}},
+        e("div",{style:{width:116,height:116,borderRadius:"50%",background:C.card,display:"grid",placeItems:"center"}},
+          e("div",{style:{textAlign:"center"}},
+            e("div",{style:{fontSize:40,fontWeight:800,lineHeight:1,color:bandColor}},r.overall.toFixed(1)),
+            e("div",{style:{fontSize:12,color:C.mut,fontWeight:600}},"de 10")))),
+      e("div",{style:{flex:1,minWidth:250}},
+        e("span",{style:{display:"inline-block",background:bandColor+"22",color:bandColor,fontSize:12,fontWeight:800,padding:"6px 12px",borderRadius:8,marginBottom:12,textTransform:"uppercase"}},bandLabel),
+        e("h2",{style:{fontSize:"clamp(20px,3.2vw,26px)",fontWeight:800,margin:"0 0 8px",lineHeight:1.2}}, (a.setor?"Sua operação em "+a.setor.toLowerCase():"Sua operação comercial")+" está "+(r.overall<4?"no improviso":r.overall<7?"meio amarrada":"bem estruturada")+"."),
+        e("p",{style:{color:C.mut,fontSize:14.5,lineHeight:1.55,margin:0}},
+          r.overall<4?"Você vende, mas dependendo de sorte, indicação e dos mesmos clientes. Falta canal próprio e processo — e é aí que está o dinheiro parado.":
+          r.overall<7?"Tem coisa funcionando, mas desconectada. Algumas áreas seguram a operação, outras dependem de uma pessoa ou de indicação. Ajustando os gargalos certos, o salto é rápido.":
+          "Sua base é sólida: previsibilidade, entrada de clientes e processo rodando. O jogo agora é escalar — novas regiões e volume sem perder margem."))
+    ),
+
+    r.naoSabe>=2&&e("div",{style:{background:C.blue+"14",border:"1px solid "+C.blue+"55",borderRadius:16,padding:"20px 22px",marginBottom:6}},
+      e("div",{style:{display:"flex",alignItems:"center",gap:10,marginBottom:8}},
+        e("span",{style:{fontSize:20}},"🔍"),
+        e("span",{style:{fontWeight:800,fontSize:16,color:C.blue}},"Você não soube dizer "+r.naoSabe+" dos seus números")),
+      e("p",{style:{color:C.mut,fontSize:14.5,lineHeight:1.55,margin:0}},"E isso não é falha sua — é o próprio sintoma. Quem não enxerga ticket, conversão e de onde vem cliente está ",e("b",{style:{color:C.white}},"dirigindo a empresa no escuro"),". A boa notícia: organizar esses números é o primeiro passo, e é rápido. Foi exatamente o que faltou até aqui.")
+    ),
+
+    r.benchmarks.length>0&&e(Bloco,{n:"01",titulo:"Você comparado à média do setor",sub:"Benchmark com indústrias B2B (Brasil + referências globais)."},
+      e("div",{style:{display:"grid",gap:10}},
+        r.benchmarks.map((b,k)=>e("div",{key:k,style:{background:C.card,border:"1px solid "+C.line,borderLeft:"3px solid "+statusColor(b.status),borderRadius:12,padding:"15px 17px"}},
+          e("div",{style:{display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:6,marginBottom:6}},
+            e("span",{style:{fontWeight:700,fontSize:14.5}},b.k),
+            e("span",{style:{fontSize:13,fontWeight:700,color:statusColor(b.status)}},b.status==="ok"?"No padrão":b.status==="warn"?"Atenção":"Crítico")),
+          e("div",{style:{display:"flex",gap:18,flexWrap:"wrap",marginBottom:8}},
+            e("span",{style:{fontSize:13,color:C.mut}},"Você: ",e("b",{style:{color:C.white}},b.you)),
+            e("span",{style:{fontSize:13,color:C.mut}},"Mercado: ",e("b",{style:{color:C.blue}},b.market))),
+          e("p",{style:{margin:0,fontSize:13.5,color:C.mut,lineHeight:1.45}},b.note)))
+      )
+    ),
+
+    e(Bloco,{n:"02",titulo:"Onde está travando — e o que fazer",sub:"Suas áreas do gargalo mais grave pro mais leve, com a ação certa pra cada uma."},
+      e("div",{style:{display:"grid",gap:10}},
+        r.ranked.map((area,k)=>{const lv=lvl(area.score);const c=lv==="baixo"?C.red:lv==="medio"?C.amber:C.green;
+          return e("div",{key:area.key,style:{background:C.card,border:"1px solid "+C.line,borderRadius:13,padding:"16px 18px"}},
+            e("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:9}},
+              e("span",{style:{fontWeight:700,fontSize:14.5}}, k===0&&e("span",{style:{color:C.red,marginRight:6}},"● gargalo nº1 "), area.name),
+              e("span",{style:{fontWeight:800,fontSize:14.5,color:c}},area.score.toFixed(1))),
+            e("div",{style:{height:7,background:C.bg2,borderRadius:8,overflow:"hidden",marginBottom:11}},
+              e("div",{className:"bar",style:{width:(area.score/10*100)+"%",height:"100%",background:c}})),
+            e("p",{style:{margin:0,fontSize:13.5,color:C.mut,lineHeight:1.5}}, e("span",{style:{color:C.gold,fontWeight:700}},"→ "), PLANO[area.key][lv]));
+        })
+      )
+    ),
+
+    e(Bloco,{n:"03",titulo:"O caminho que o mercado já provou",sub:"Não é opinião da DROS. É pra onde a indústria foi."},
+      e("div",{style:{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:10}},
+        [
+          ["67%","das indústrias hoje preferem comprar por canais digitais — eram só 20% em 2017 (McKinsey)"],
+          ["~80%","das interações de vendas B2B já acontecem no digital (Gartner)"],
+          ["até +70%","mais crescimento de mercado nas empresas que se estruturam em canais (McKinsey B2B Pulse)"],
+          ["10+","canais que um comprador usa numa única decisão de compra (McKinsey)"],
+        ].map((s,k)=>e("div",{key:k,style:{background:C.card,border:"1px solid "+C.line,borderRadius:14,padding:"18px 18px"}},
+          e("div",{style:{fontSize:26,fontWeight:800,color:C.gold,lineHeight:1,marginBottom:8}},s[0]),
+          e("div",{style:{fontSize:13,color:C.mut,lineHeight:1.45}},s[1])))
+      ),
+      e("p",{style:{color:C.white,fontSize:15,lineHeight:1.55,marginTop:14,fontWeight:600}},"As indústrias que cresceram não venderam melhor — elas se ",e("span",{style:{color:C.gold}},"estruturaram melhor"),". O produto raramente é o problema. O problema é canal, processo e previsibilidade.")
+    ),
+
+    e(Bloco,{n:"04",titulo:"Quanto dá pra destravar",sub:"Projeção conservadora do que sua operação pode ganhar ajustando os gargalos."},
+      r.proj.hasData?e("div",null,
+        e("div",{style:{background:"linear-gradient(135deg,"+C.card+","+C.bg2+")",border:"1px solid "+C.gold+"55",borderRadius:18,padding:"26px 24px",marginBottom:14}},
+          e("div",{style:{fontSize:13,color:C.mut,fontWeight:600,marginBottom:4}},"Potencial de receita adicional"),
+          e("div",{style:{fontSize:"clamp(30px,6vw,44px)",fontWeight:800,color:C.gold,lineHeight:1}},brl(r.proj.ganhoMensal),e("span",{style:{fontSize:18,color:C.mut,fontWeight:600}},"/mês")),
+          e("div",{style:{fontSize:15,color:C.white,fontWeight:700,marginTop:6}},"≈ "+brl(r.proj.ganhoAnual)+" por ano")),
+        e("div",{style:{display:"grid",gap:8}},
+          r.proj.receitaNovos>0&&e(Linha,{label:"Subir de "+(a.novosMes||0)+" pra ~"+r.proj.novosAlvo+" clientes novos/mês",val:brl(r.proj.receitaNovos)+"/mês"}),
+          r.proj.ganhoConv>0&&e(Linha,{label:"Elevar conversão de "+r.proj.convAtual+"% pra ~"+r.proj.convAlvo+"% com processo",val:brl(r.proj.ganhoConv)+"/mês"}),
+          r.proj.ganhoFollow>0&&e(Linha,{label:"Recuperar orçamentos perdidos com follow-up",val:brl(r.proj.ganhoFollow)+"/mês"})),
+        e("p",{style:{fontSize:12,color:C.mut2,marginTop:12,lineHeight:1.5}},"Estimativa conservadora com base no seu ticket de "+brl(r.proj.ticket)+". Não é promessa — é o tamanho da oportunidade parada hoje.")
+      ):e("p",{style:{color:C.mut,fontSize:14.5,lineHeight:1.6}},"Pra calcular em reais precisamos do seu ticket e base de clientes. Como você não soube dizer, esse é justamente o número que a gente levanta primeiro com você — e aí a projeção fica real.")
+    ),
+
+    e(Bloco,{n:"05",titulo:"Seu plano de ação nos próximos 90 dias",sub:"Dá pra fazer sozinho ou com a gente. Veja a diferença honestamente."},
+      e("div",{style:{background:C.card,border:"1px solid "+C.line,borderRadius:14,padding:"14px 16px",marginBottom:12,fontSize:14,color:C.mut,lineHeight:1.5}},
+        e("b",{style:{color:C.white}},"Importante: "),"nada disso é falha sua — é falta de estrutura. E estrutura se constrói. Veja o caminho:"),
+      [
+        ["Até 30 dias","No ar","mapear processo, escolher e configurar um CRM, organizar a base do zero — no tempo que sobrar.","anúncios rodando, CRM configurado e atendimento sendo acompanhado. Primeiros leads e clientes entrando."],
+        ["30–60 dias","Ler os dados","tentar entender o que converteu, sem histórico nem parâmetro de comparação.","os gargalos aparecem nos números. Ajustamos o que converte, cortamos o que não traz pedido."],
+        ["60–90 dias","Escalar","tentar repetir o que deu certo, na base da tentativa e erro.","previsibilidade instalada. Abrir região e ganhar volume sobre base sólida, com ajuste contínuo."],
+      ].map((f,k)=>e("div",{key:k,style:{marginBottom:12}},
+        e("div",{style:{display:"flex",alignItems:"center",gap:10,marginBottom:8}},
+          e("span",{style:{background:C.gold,color:"#000",fontWeight:800,fontSize:12,padding:"4px 10px",borderRadius:7}},f[0]),
+          e("span",{style:{fontWeight:800,fontSize:16}},f[1])),
+        e("div",{className:"twocol"},
+          e("div",{style:{background:C.bg2,border:"1px solid "+C.line,borderRadius:12,padding:"14px 16px"}},
+            e("div",{style:{fontSize:12,fontWeight:700,color:C.mut2,textTransform:"uppercase",marginBottom:6}},"Sozinho"),
+            e("div",{style:{fontSize:13.5,color:C.mut,lineHeight:1.5}},f[2])),
+          e("div",{style:{background:C.gold+"12",border:"1px solid "+C.gold+"55",borderRadius:12,padding:"14px 16px"}},
+            e("div",{style:{fontSize:12,fontWeight:700,color:C.gold,textTransform:"uppercase",marginBottom:6}},"Com a DROS"),
+            e("div",{style:{fontSize:13.5,color:C.white,lineHeight:1.5}},f[3])))
+      ))
+    ),
+
+    e("div",{style:{marginTop:30,background:C.card,border:"1px solid "+C.line,borderLeft:"3px solid "+C.amber,borderRadius:16,padding:"24px 24px"}},
+      e("div",{style:{fontWeight:800,fontSize:18,marginBottom:10}},"Um aviso honesto antes de crescer"),
+      e("p",{style:{color:C.mut,fontSize:14.5,lineHeight:1.6,margin:"0 0 10px"}},"Crescer muda a empresa — e nem todo mundo vem junto. Estrutura previsível exige ",e("b",{style:{color:C.white}},"rotina, processo e decisão por dado"),". Às vezes, quem te trouxe até aqui não é quem vai te levar adiante, e tudo bem. Não é sobre trocar pessoas: é sobre estar pronto pra operar diferente."),
+      e("p",{style:{color:C.white,fontSize:15,lineHeight:1.6,margin:0,fontWeight:700}},"Na era da IA e do acompanhamento em tempo real, a decisão sai do achismo e vai pro número. ",e("span",{style:{color:C.gold}},"Quem decide por dado, cresce. Quem decide por sensação, oscila."))
+    ),
+
+    e(Bloco,{n:"06",titulo:"O que você recebe com a DROS",sub:"Estrutura completa de canal de vendas digital, funcionando em menos de 30 dias."},
+      e("div",{style:{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(250px,1fr))",gap:10,marginBottom:16}},
+        [
+          ["CRM inteligente no WhatsApp","Cada negociação organizada, com acompanhamento de atendimento em tempo real."],
+          ["Anúncios Meta otimizados","Mira em quem realmente compra — não em curtida. Verba trabalhada por dado."],
+          ["Landing pages que convertem","Página feita pra gerar pedido, não só pra ter presença."],
+          ["Posicionamento e conteúdo","Sua indústria passando confiança pra quem pesquisa antes de comprar."],
+          ["Gestão e acompanhamento","Os gargalos aparecem nos números — e a gente age sobre eles."],
+          ["Método Análise → Anúncio → Comercial","O mesmo caminho que estruturou indústrias como ASK e Quimiprol."],
+        ].map((s,k)=>e("div",{key:k,style:{background:C.card,border:"1px solid "+C.line,borderRadius:13,padding:"16px 18px"}},
+          e("div",{style:{display:"flex",alignItems:"center",gap:8,marginBottom:6}},
+            e("span",{style:{color:C.gold,fontWeight:800}},"✓"),
+            e("span",{style:{fontWeight:700,fontSize:14.5}},s[0])),
+          e("div",{style:{fontSize:13,color:C.mut,lineHeight:1.45}},s[1])))
+      ),
+      e("div",{style:{background:"linear-gradient(135deg,"+C.bg2+","+C.card+")",border:"1px solid "+C.gold+"55",borderRadius:18,padding:"26px 24px"}},
+        e("div",{style:{fontSize:13,color:C.mut,fontWeight:600,marginBottom:4}},"Plano inicial, a partir de"),
+        e("div",{style:{fontSize:"clamp(30px,6vw,42px)",fontWeight:800,color:C.gold,lineHeight:1}},brl(CONTATO.precoBase),e("span",{style:{fontSize:18,color:C.mut,fontWeight:600}},"/mês")),
+        e("div",{style:{fontSize:14,color:C.white,fontWeight:700,marginTop:8}},"Serviço completo + "+brl(CONTATO.verbaAnuncio)+" de verba de anúncio inclusos."),
+        e("p",{style:{fontSize:13.5,color:C.mut,lineHeight:1.55,marginTop:10}},"É o custo de um vendedor — só que esse trabalha em todos os canais, não tira férias, e você enxerga cada resultado em número.")
+      )
+    ),
+
+    e("div",{style:{marginTop:38,background:C.gold,borderRadius:20,padding:"32px 28px",color:"#000"}},
+      e("h3",{style:{fontSize:"clamp(22px,3.6vw,30px)",fontWeight:800,margin:"0 0 12px",lineHeight:1.15}},"Quer transformar esse diagnóstico em pedido?"),
+      e("p",{style:{fontSize:15.5,lineHeight:1.55,margin:"0 0 22px",fontWeight:600}},"Fale com um especialista da DROS. A gente olha seu raio-X junto com você e mostra, com seus números, o caminho mais curto pra previsibilidade. Conversa de 30 minutos, sem compromisso."),
+      e("a",{href:CONTATO.ctaLink,target:"_blank",className:"btn",style:{display:"inline-block",background:"#000",color:C.gold,textDecoration:"none",borderRadius:12,padding:"16px 30px",fontSize:16,fontWeight:800}},"Falar com um especialista →"),
+      e("p",{style:{fontSize:13,marginTop:14,color:"#3a2e00",fontWeight:600}},"Empresário falando com empresário. Sem enrolação.")
+    ),
+
+    e("button",{onClick:onRestart,style:{display:"block",margin:"24px auto 0",background:"transparent",color:C.mut,border:"1px solid "+C.line,borderRadius:10,padding:"11px 22px",fontSize:14,fontWeight:600,cursor:"pointer"}},"↻ Refazer diagnóstico")
+  );
+}
+
+function Bloco({n,titulo,sub,children}){
+  return e("div",{style:{marginTop:36}},
+    e("div",{style:{display:"flex",alignItems:"baseline",gap:12,marginBottom:4}},
+      e("span",{style:{color:C.gold,fontWeight:800,fontSize:14}},n),
+      e("h3",{style:{fontSize:"clamp(18px,3vw,22px)",fontWeight:800,margin:0}},titulo)),
+    e("p",{style:{color:C.mut,fontSize:13.5,margin:"0 0 16px",paddingLeft:26}},sub),
+    children
+  );
+}
+
+function Linha({label,val}){
+  return e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",gap:12,background:C.card,border:"1px solid "+C.line,borderRadius:11,padding:"13px 16px"}},
+    e("span",{style:{fontSize:13.5,color:C.mut,lineHeight:1.4}},label),
+    e("span",{style:{fontSize:14.5,fontWeight:800,color:C.green,whiteSpace:"nowrap"}},val)
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(e(App));
+</script>
 </body>
 </html>
