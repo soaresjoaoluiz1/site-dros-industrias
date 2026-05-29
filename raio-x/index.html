@@ -148,6 +148,18 @@ const CONTATO = {
   verbaAnuncio: 1500,
 };
 
+// ======= TRACKING — endpoint Apps Script (mesma URL do diagnostico) =======
+const LEAD_ENDPOINT = 'https://script.google.com/macros/s/AKfycbz2PaOoVV2xI5OGA8BW46nKLzZmXnqLgbeBiNYEqL2paqOS3JlqKyHjeQHUyozKgoQuWg/exec';
+const LEAD_SECRET   = 'dros-leads-2026-9bK4Tx7QmR2pYz8WfA3H';
+
+const genEventId = () => {
+  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = Math.random() * 16 | 0;
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+};
+
 const C = {
   bg:"#0a1018", bg2:"#0d141d", card:"#11171f", cardHi:"#151c25", line:"rgba(255,255,255,0.07)",
   gold:"#ffb300", gold2:"#f59e0b", white:"#f5f7fa", mut:"rgba(255,255,255,0.66)", mut2:"rgba(255,255,255,0.40)",
@@ -398,6 +410,159 @@ function Result({r,a,onRestart}){
   const bandLabel=r.overall<4?"Comercial no improviso":r.overall<7?"Parcialmente estruturado":"Comercial maduro";
   const statusColor=s=>s==="ok"?C.green:s==="warn"?C.amber:C.red;
 
+  // ===== Submit pra planilha + Pixel events (uma vez so, no mount) =====
+  const sentRef = useRef(false);
+  useEffect(() => {
+    if (sentRef.current) return;
+    sentRef.current = true;
+
+    // Carrega tracking salvo na sessao
+    let tracking = {};
+    try { tracking = JSON.parse(sessionStorage.getItem('dros_tracking') || '{}'); } catch (_) {}
+
+    // Resolve faixa de faturamento (label + valor numerico)
+    const fatV = a.fatFaixa === NAOSEI || a.fatFaixa == null ? 0 : Number(a.fatFaixa);
+    const fatItem = FAT_FAIXAS.find(x => x.v === fatV);
+    const fatLabel = fatItem ? fatItem.label : '';
+    const isMais500k = fatV >= 500000;
+    const tier = fatV >= 500000 ? 'mais500k' : (fatV > 0 ? 'menos500k' : '');
+
+    const eventId = genEventId();
+    const cleanArr = (x) => Array.isArray(x) ? x.join(', ') : (x === NAOSEI ? 'não sei dizer' : (x || ''));
+    const cleanVal = (x) => x === NAOSEI ? 'não sei dizer' : (x === undefined || x === null ? '' : x);
+
+    const payload = {
+      _secret: LEAD_SECRET,
+      event_source: 'dros-sales-raio-x',
+      event_id: eventId,
+      event_name: 'RaioXCompleto',
+      submitted_at: new Date().toISOString(),
+      time_on_page_seconds: tracking.session_start
+        ? Math.round((Date.now() - tracking.session_start) / 1000)
+        : null,
+
+      // Respostas
+      setor: cleanVal(a.setor),
+      tempo: cleanVal(a.tempo),
+      entrega: cleanVal(a.entrega),
+      redes: cleanArr(a.redes),
+      jatentou: cleanVal(a.jatentou),
+      dificuldade: cleanVal(a.dificuldade),
+      fatFaixa_label: fatLabel,
+      fat_valor: fatV,
+      ticket: cleanVal(a.ticket),
+      clientesAtivos: cleanVal(a.clientesAtivos),
+      novosMes: cleanVal(a.novosMes),
+      topClientesPct: cleanVal(a.topClientesPct),
+      indicacaoPct: cleanVal(a.indicacaoPct),
+      investe: cleanVal(a.investe),
+      canais: cleanArr(a.canais),
+      crm: cleanVal(a.crm),
+      followup: cleanVal(a.followup),
+      conversao: cleanVal(a.conversao),
+      prev1: cleanVal(a.prev1),
+      novos1: cleanVal(a.novos1),
+      proc1: cleanVal(a.proc1),
+      digital1: cleanVal(a.digital1),
+      cresce1: cleanVal(a.cresce1),
+
+      // Analise
+      score_overall: r.overall ? Number(r.overall.toFixed(2)) : '',
+      faixa: r.overall < 4 ? 'baixo' : r.overall < 7 ? 'medio' : 'alto',
+      band_label: bandLabel,
+      score_prev: r.areaScores && r.areaScores.prev ? Number(r.areaScores.prev.toFixed(2)) : '',
+      score_novos: r.areaScores && r.areaScores.novos ? Number(r.areaScores.novos.toFixed(2)) : '',
+      score_proc: r.areaScores && r.areaScores.proc ? Number(r.areaScores.proc.toFixed(2)) : '',
+      score_digital: r.areaScores && r.areaScores.digital ? Number(r.areaScores.digital.toFixed(2)) : '',
+      score_gestao: r.areaScores && r.areaScores.gestao ? Number(r.areaScores.gestao.toFixed(2)) : '',
+      ganho_mensal: r.proj && r.proj.ganhoMensal ? Math.round(r.proj.ganhoMensal) : '',
+      ganho_anual: r.proj && r.proj.ganhoAnual ? Math.round(r.proj.ganhoAnual) : '',
+
+      // Tracking
+      current_page: location.href,
+      page_title: document.title,
+      landing_page: tracking.landing_page || location.href,
+      referrer: tracking.referrer || document.referrer || '',
+      traffic_type: tracking.traffic_type || '',
+      utm_source: tracking.utm_source || '', utm_medium: tracking.utm_medium || '',
+      utm_campaign: tracking.utm_campaign || '', utm_term: tracking.utm_term || '',
+      utm_content: tracking.utm_content || '', utm_id: tracking.utm_id || '',
+      fbclid: tracking.fbclid || '', gclid: tracking.gclid || '',
+      gbraid: tracking.gbraid || '', wbraid: tracking.wbraid || '',
+      ttclid: tracking.ttclid || '', li_fat_id: tracking.li_fat_id || '',
+      msclkid: tracking.msclkid || '', twclid: tracking.twclid || '',
+      epik: tracking.epik || '', sccid: tracking.ScCid || '',
+      fbp: tracking._fbp || '', fbc: tracking._fbc || '',
+      ga: tracking._ga || '', ga_client_id: tracking._ga_cid || '',
+      user_agent: navigator.userAgent, language: navigator.language || '',
+      timezone: (Intl.DateTimeFormat().resolvedOptions().timeZone) || '',
+      screen: (screen.width || '') + 'x' + (screen.height || ''),
+      viewport: (window.innerWidth || '') + 'x' + (window.innerHeight || ''),
+    };
+
+    // Backup local (sempre, antes do envio)
+    try {
+      const list = JSON.parse(localStorage.getItem('dros_raiox_submissions') || '[]');
+      list.push(payload);
+      localStorage.setItem('dros_raiox_submissions', JSON.stringify(list));
+    } catch (_) {}
+
+    // POST fire-and-forget pra Apps Script
+    if (LEAD_ENDPOINT) {
+      fetch(LEAD_ENDPOINT, {
+        method: 'POST', mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload),
+      }).catch(() => {});
+    }
+
+    // Pixel: Lead padrao + evento custom por faixa
+    try {
+      if (typeof fbq === 'function') {
+        fbq('track', 'Lead', {
+          content_name: 'Raio-X Comercial DROS',
+          content_category: 'industria',
+          faturamento: fatLabel,
+          tier: tier,
+          score: payload.score_overall,
+          currency: 'BRL',
+        }, { eventID: eventId });
+
+        if (isMais500k) {
+          fbq('trackCustom', 'leadquizmaisde500k', {
+            content_name: 'Raio-X Comercial DROS',
+            content_category: 'industria',
+            faturamento: fatLabel,
+            tier: 'mais500k',
+            score: payload.score_overall,
+            currency: 'BRL',
+          }, { eventID: eventId + '-fat' });
+        } else if (fatV > 0) {
+          fbq('trackCustom', 'leadquizmenos500k', {
+            content_name: 'Raio-X Comercial DROS',
+            content_category: 'industria',
+            faturamento: fatLabel,
+            tier: 'menos500k',
+            score: payload.score_overall,
+            currency: 'BRL',
+          }, { eventID: eventId + '-fat' });
+        }
+        // Se "não sei dizer" → nao dispara custom, so o Lead padrao.
+      }
+    } catch (_) {}
+
+    // Passa eventId+tier pra CTA do final do resultado (pra dedup com diagnostico se ele preencher depois)
+    try {
+      const cta = document.querySelector('a[href*="diagnostico"]');
+      if (cta) {
+        const url = new URL(cta.href, location.origin);
+        url.searchParams.set('raiox_event_id', eventId);
+        if (tier) url.searchParams.set('raiox_tier', tier);
+        cta.href = url.toString();
+      }
+    } catch (_) {}
+  }, []);
+
   return e("section",{className:"fade",style:{padding:"26px 0 10px"}},
     e("span",{style:{fontSize:12,fontWeight:700,letterSpacing:2,color:C.gold,textTransform:"uppercase"}},"Seu raio-x comercial"),
 
@@ -558,5 +723,83 @@ function Linha({label,val}){
 
 ReactDOM.createRoot(document.getElementById("root")).render(e(App));
 </script>
+
+<!-- ===== Meta Pixel Base ===== -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1112856240610448');
+fbq('track', 'PageView');
+fbq('track', 'ViewContent', { content_name: 'Raio-X Comercial', content_category: 'industria' });
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1112856240610448&ev=PageView&noscript=1" alt=""/></noscript>
+<!-- End Meta Pixel -->
+
+<!-- ===== Tracking Capture (UTMs, click IDs, cookies, contexto) =====
+     Roda antes do React montar — popula sessionStorage que o Result usa pra POST.
+-->
+<script>
+(function () {
+  const SESSION_KEY = 'dros_tracking';
+  let tracking = {};
+  try { tracking = JSON.parse(sessionStorage.getItem(SESSION_KEY) || '{}'); } catch (_) {}
+
+  const params = new URLSearchParams(window.location.search);
+  const TRACK_PARAMS = [
+    'utm_source','utm_medium','utm_campaign','utm_term','utm_content','utm_id',
+    'fbclid','gclid','gbraid','wbraid','ttclid','li_fat_id','msclkid','twclid','epik','ScCid',
+  ];
+  TRACK_PARAMS.forEach(p => { if (params.get(p)) tracking[p] = params.get(p); });
+
+  if (!tracking.landing_page) tracking.landing_page = location.href;
+  if (!tracking.referrer && document.referrer) tracking.referrer = document.referrer;
+  if (!tracking.session_start) tracking.session_start = Date.now();
+
+  const getCookie = (name) => {
+    const m = document.cookie.match(new RegExp('(^|; )' + name + '=([^;]+)'));
+    return m ? decodeURIComponent(m[2]) : '';
+  };
+  // Espera o Pixel setar _fbp (proximo tick) antes de salvar
+  setTimeout(() => {
+    tracking._fbp = getCookie('_fbp');
+    let fbc = getCookie('_fbc');
+    if (!fbc && tracking.fbclid) fbc = 'fb.1.' + Date.now() + '.' + tracking.fbclid;
+    tracking._fbc = fbc;
+    const ga = getCookie('_ga');
+    if (ga) tracking._ga = ga;
+    const gaMatch = ga.match(/^GA\d\.\d\.(.+)$/);
+    if (gaMatch) tracking._ga_cid = gaMatch[1];
+
+    const inferTrafficType = (t) => {
+      if (t.fbclid || t.gclid || t.gbraid || t.wbraid || t.ttclid || t.msclkid || t.li_fat_id) return 'paid';
+      if (['cpc','ppc','paid','paid-social','paid_social','cpm'].includes((t.utm_medium||'').toLowerCase())) return 'paid';
+      if ((t.utm_medium||'').toLowerCase() === 'email') return 'email';
+      if (['social','social-network','sm'].includes((t.utm_medium||'').toLowerCase())) return 'social';
+      if ((t.utm_medium||'').toLowerCase() === 'organic') return 'organic';
+      const ref = (t.referrer||'').toLowerCase();
+      if (!ref) return 'direct';
+      if (/google\.|bing\.|duckduckgo\.|yahoo\.|yandex\./.test(ref)) return 'organic';
+      if (/facebook\.|instagram\.|linkedin\.|t\.co|twitter\.|x\.com|tiktok\.|youtube\./.test(ref)) return 'social';
+      return 'referral';
+    };
+    tracking.traffic_type = inferTrafficType(tracking);
+
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(tracking));
+    window._drosTracking = tracking;
+  }, 800);
+
+  // Salva o basico imediatamente (sem cookies do Pixel ainda)
+  sessionStorage.setItem(SESSION_KEY, JSON.stringify(tracking));
+  window._drosTracking = tracking;
+})();
+</script>
+
 </body>
 </html>

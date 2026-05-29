@@ -643,10 +643,13 @@
           }).catch(() => { /* ignora — backup local já feito */ });
         }
 
-        // Redireciona pra página de obrigado com o event_id (necessário para deduplicação CAPI).
+        // Redireciona pra página de obrigado com event_id (dedup CAPI) + faturamento (pra disparar evento custom).
         // Aguardo 300ms pro fetch sair antes de mudar de página.
         setTimeout(() => {
-          const redirectParams = new URLSearchParams({ event_id: payload.event_id });
+          const redirectParams = new URLSearchParams({
+            event_id: payload.event_id,
+            faturamento: payload.faturamento || '',
+          });
           window.location.href = 'obrigado.html?' + redirectParams.toString();
         }, 300);
       });
