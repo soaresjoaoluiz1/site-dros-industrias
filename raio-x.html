@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Raio X Comercial — DROS Sales</title>
+  <meta name="description" content="Raio X comercial da sua indústria em 60 segundos. Descubra onde a venda está travando.">
+  <meta name="theme-color" content="#0a1018">
+  <meta name="robots" content="noindex, follow">
+
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg:           #0a1018;
+      --bg-soft:      #0d141d;
+      --bg-deep:      #06090e;
+      --bg-card:      rgba(255, 255, 255, 0.04);
+      --bg-card-hi:   rgba(255, 255, 255, 0.08);
+      --accent:       #ffb300;
+      --accent-soft:  rgba(255, 179, 0, 0.10);
+      --accent-glow:  rgba(255, 179, 0, 0.28);
+      --accent-deep:  #f59e0b;
+      --text:         #ffffff;
+      --text-muted:   rgba(255, 255, 255, 0.72);
+      --text-subtle:  rgba(255, 255, 255, 0.48);
+      --border:       rgba(255, 255, 255, 0.10);
+      --border-hi:    rgba(255, 255, 255, 0.20);
+      --danger:       #ff6868;
+
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-body:    'Inter', system-ui, -apple-system, sans-serif;
+      --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+      --ease:         cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-spring:  cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *::before, *::after { box-sizing: border-box; }
+
+    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--font-body); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'cv02', 'cv03', 'cv11'; }
+    html { overflow: hidden; }
+    body {
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at top, rgba(255, 179, 0, 0.10), transparent 55%),
+        radial-gradient(ellipse at bottom, rgba(255, 179, 0, 0.06), transparent 60%),
+        var(--bg);
+      position: relative;
+    }
+    body.is-result { overflow: auto; }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0; pointer-events: none; z-index: 1;
+      opacity: 0.04; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .quiz-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      padding: 22px clamp(20px, 4vw, 48px);
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(180deg, rgba(10, 16, 24, 0.92), rgba(10, 16, 24, 0));
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    }
+    .quiz-nav-logo { display: flex; align-items: center; gap: 10px; }
+    .quiz-nav-logo img { width: 38px; height: 38px; object-fit: contain; }
+    .quiz-nav-logo-text {
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--text-muted); font-weight: 600;
+    }
+    .quiz-back {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 18px; border-radius: 100px;
+      background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border);
+      color: var(--text-muted); font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: all 0.25s var(--ease); font-family: inherit;
+    }
+    .quiz-back:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--border-hi); color: var(--text); }
+    .quiz-back svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2.2; fill: none; }
+    .quiz-back[hidden] { display: none; }
+
+    .quiz-progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 60; background: rgba(255, 255, 255, 0.04); }
+    .quiz-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent-deep), var(--accent)); box-shadow: 0 0 12px var(--accent-glow); transition: width 0.6s var(--ease); }
+    .quiz-progress-label {
+      position: fixed; top: 84px; right: clamp(20px, 4vw, 48px); z-index: 49;
+      font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--text-subtle); font-weight: 600;
+    }
+    .quiz-progress-label .accent { color: var(--accent); }
+
+    .stage { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; padding: 100px clamp(20px, 4vw, 48px) 60px; z-index: 10; }
+
+    .screen {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      padding: 100px clamp(20px, 4vw, 48px) 60px;
+      opacity: 0; pointer-events: none; visibility: hidden;
+    }
+    .screen.is-active { opacity: 1; pointer-events: auto; visibility: visible; }
+    .screen-inner { width: 100%; max-width: 760px; text-align: center; }
+    .screen-inner--wide { max-width: 920px; }
+    .screen-inner--result { max-width: 980px; }
+
+    .screen--result {
+      position: relative;
+      padding: 120px clamp(20px, 4vw, 48px) 100px;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.28em;
+      text-transform: uppercase; font-weight: 600; color: var(--accent);
+      display: inline-flex; align-items: center; gap: 12px; margin-bottom: 28px;
+    }
+    .eyebrow::before, .eyebrow::after { content: ''; width: 24px; height: 1px; background: var(--accent); opacity: 0.5; }
+    .question-title {
+      font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.6rem);
+      font-weight: 500; letter-spacing: -0.02em; line-height: 1.05; color: var(--text);
+      margin-bottom: 18px; text-wrap: balance;
+    }
+    .question-title em { font-style: italic; color: var(--accent); font-weight: 500; font-variation-settings: 'opsz' 144; }
+    .question-sub {
+      font-size: clamp(0.95rem, 1.4vw, 1.08rem); color: var(--text-muted);
+      max-width: 540px; margin: 0 auto 44px; line-height: 1.55;
+    }
+
+    .options { display: grid; gap: 12px; max-width: 580px; margin: 0 auto; }
+    .options--grid-2 { grid-template-columns: repeat(2, 1fr); max-width: 580px; }
+    .options--grid-3 { grid-template-columns: repeat(3, 1fr); max-width: 720px; }
+    .options--grid-2-md { grid-template-columns: repeat(2, 1fr); max-width: 720px; }
+    @media (max-width: 640px) { .options--grid-2, .options--grid-3, .options--grid-2-md { grid-template-columns: 1fr; } }
+
+    .option {
+      position: relative; padding: 18px 24px; background: var(--bg-card);
+      border: 1px solid var(--border); border-radius: 14px; cursor: pointer;
+      transition: all 0.25s var(--ease); text-align: left; font-family: inherit;
+      color: var(--text); font-size: 1rem; font-weight: 500;
+      display: flex; align-items: center; gap: 14px; overflow: hidden;
+    }
+    .option:hover { background: var(--bg-card-hi); border-color: var(--border-hi); transform: translateY(-2px); }
+    .option.is-selected {
+      background: rgba(255, 179, 0, 0.10); border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(255, 179, 0, 0.18), 0 14px 30px rgba(255, 179, 0, 0.12);
+    }
+    .option-marker {
+      width: 22px; height: 22px; border-radius: 50%;
+      border: 1.5px solid var(--border-hi); flex-shrink: 0;
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: all 0.25s var(--ease); background: rgba(0, 0, 0, 0.2);
+    }
+    .option-marker svg { width: 11px; height: 11px; stroke: var(--bg); stroke-width: 3; fill: none; opacity: 0; transition: opacity 0.2s var(--ease); }
+    .option.is-selected .option-marker { background: var(--accent); border-color: var(--accent); }
+    .option.is-selected .option-marker svg { opacity: 1; }
+    .option-content { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+    .option-label { font-weight: 500; color: var(--text); }
+    .option-hint { font-size: 12.5px; color: var(--text-subtle); font-weight: 400; }
+
+    .field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; text-align: left; }
+    .field-label { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); font-weight: 600; }
+    .field-input {
+      width: 100%; padding: 16px 20px; background: var(--bg-card);
+      border: 1px solid var(--border); border-radius: 12px;
+      color: var(--text); font-family: inherit; font-size: 1.05rem; font-weight: 500;
+      transition: all 0.25s var(--ease); outline: none;
+    }
+    .field-input:focus { background: var(--bg-card-hi); border-color: var(--accent); box-shadow: 0 0 0 4px rgba(255, 179, 0, 0.14); }
+    .field-input::placeholder { color: var(--text-subtle); }
+    .field-input.is-invalid { border-color: var(--danger); box-shadow: 0 0 0 4px rgba(255, 104, 104, 0.14); animation: shake 0.4s var(--ease); }
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 16px 32px; border-radius: 100px; font-family: inherit;
+      font-size: 0.98rem; font-weight: 600; cursor: pointer;
+      transition: all 0.25s var(--ease); border: none; text-decoration: none;
+      letter-spacing: -0.005em;
+    }
+    .btn--primary {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
+      color: #0a0a0f;
+      box-shadow: 0 14px 36px rgba(255, 179, 0, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+    .btn--primary:hover { transform: translateY(-3px); box-shadow: 0 20px 48px rgba(255, 179, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.3); }
+    .btn--ghost { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border); color: var(--text-muted); }
+    .btn--ghost:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--border-hi); color: var(--text); }
+    .btn--lg { padding: 18px 38px; font-size: 1.05rem; }
+    .btn .arrow { transition: transform 0.2s var(--ease); }
+    .btn:hover .arrow { transform: translateX(4px); }
+
+    .btn-row { display: flex; gap: 12px; justify-content: center; margin-top: 36px; flex-wrap: wrap; }
+
+    .welcome-eyebrow-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 18px 8px 14px; background: rgba(255, 179, 0, 0.10);
+      border: 1px solid rgba(255, 179, 0, 0.28); border-radius: 100px;
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 32px;
+    }
+    .welcome-eyebrow-pill::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); box-shadow: 0 0 0 4px rgba(255, 179, 0, 0.22);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 4px rgba(255, 179, 0, 0.22); } 50% { box-shadow: 0 0 0 8px rgba(255, 179, 0, 0.06); } }
+    .welcome-hero {
+      font-family: var(--font-display); font-size: clamp(2.6rem, 7vw, 5rem);
+      font-weight: 500; letter-spacing: -0.025em; line-height: 0.98;
+      margin-bottom: 22px; text-wrap: balance;
+    }
+    .welcome-hero em { font-style: italic; color: var(--accent); font-variation-settings: 'opsz' 144; font-weight: 500; }
+    .welcome-lead { font-size: clamp(1.05rem, 1.6vw, 1.22rem); color: var(--text-muted); max-width: 580px; margin: 0 auto 24px; line-height: 1.6; }
+    .welcome-bullets {
+      display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; margin-top: 32px;
+      font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.06em;
+      color: var(--text-subtle); font-weight: 500;
+    }
+    .welcome-bullets span { display: inline-flex; align-items: center; gap: 8px; }
+    .welcome-bullets span::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); opacity: 0.7; }
+
+    .trust-micro {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--text-subtle); font-weight: 600; margin-top: 28px;
+    }
+    .trust-micro svg { width: 12px; height: 12px; stroke: currentColor; stroke-width: 2; fill: none; }
+
+    /* ====================================================
+       RESULT SCREEN
+       ==================================================== */
+    .result-eyebrow-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 18px 8px 14px; background: rgba(255, 179, 0, 0.12);
+      border: 1px solid rgba(255, 179, 0, 0.32); border-radius: 100px;
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 24px;
+    }
+    .result-eyebrow-pill svg { width: 12px; height: 12px; stroke: var(--accent); stroke-width: 2.5; fill: none; }
+
+    .result-hero-title {
+      font-family: var(--font-display); font-size: clamp(2.2rem, 5.4vw, 3.8rem);
+      font-weight: 500; letter-spacing: -0.025em; line-height: 1.0;
+      margin-bottom: 16px; text-wrap: balance;
+    }
+    .result-hero-title em { font-style: italic; color: var(--accent); font-variation-settings: 'opsz' 144; font-weight: 500; }
+    .result-hero-sub { font-size: clamp(1rem, 1.4vw, 1.12rem); color: var(--text-muted); max-width: 620px; margin: 0 auto 44px; line-height: 1.55; }
+
+    .result-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 24px; padding: clamp(24px, 4vw, 40px);
+      text-align: left; margin-bottom: 24px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.32);
+    }
+    .result-card-eyebrow {
+      font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--text-subtle); font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .result-card-title {
+      font-family: var(--font-display); font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+      font-weight: 500; letter-spacing: -0.012em; color: var(--text);
+      margin-bottom: 18px; line-height: 1.15; text-wrap: balance;
+    }
+    .result-card-title em { font-style: italic; color: var(--accent); font-variation-settings: 'opsz' 144; }
+    .result-card-body { font-size: 1rem; color: var(--text-muted); line-height: 1.65; }
+    .result-card-body strong { color: var(--text); font-weight: 600; }
+
+    .result-snapshot {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 720px) { .result-snapshot { grid-template-columns: 1fr 1fr; } .result-snapshot > div:last-child { grid-column: 1 / -1; } }
+    @media (max-width: 460px) { .result-snapshot { grid-template-columns: 1fr; } .result-snapshot > div:last-child { grid-column: 1 / -1; } }
+
+    .result-stat {
+      padding: 18px 22px; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+    .result-stat-label {
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--text-subtle); font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .result-stat-value {
+      font-family: var(--font-display); font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+      font-weight: 500; color: var(--accent);
+      letter-spacing: -0.01em; line-height: 1.2;
+    }
+
+    .insights-list { display: grid; gap: 14px; margin: 8px 0 0; }
+    .insight {
+      display: grid; grid-template-columns: auto 1fr; gap: 16px;
+      padding: 18px 0; border-top: 1px solid var(--border);
+      align-items: flex-start;
+    }
+    .insight:first-child { border-top: 0; padding-top: 0; }
+    .insight-num {
+      font-family: var(--font-display); font-style: italic;
+      font-size: clamp(1.5rem, 2.6vw, 2.1rem); font-weight: 500;
+      color: var(--accent); line-height: 1; letter-spacing: -0.02em;
+      font-variation-settings: 'opsz' 144;
+      min-width: 44px;
+    }
+    .insight-body h4 {
+      font-family: var(--font-display); font-size: 1.08rem;
+      font-weight: 600; color: var(--text); margin-bottom: 6px;
+      letter-spacing: -0.005em;
+    }
+    .insight-body p { font-size: 0.96rem; color: var(--text-muted); line-height: 1.55; }
+    .insight-body p strong { color: var(--text); font-weight: 600; }
+
+    .result-cta-card {
+      background: linear-gradient(135deg, rgba(255, 179, 0, 0.14), rgba(245, 158, 11, 0.08));
+      border: 1px solid rgba(255, 179, 0, 0.3);
+      border-radius: 24px; padding: clamp(28px, 4vw, 44px);
+      text-align: center; margin-top: 32px;
+      position: relative; overflow: hidden;
+    }
+    .result-cta-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at top, rgba(255, 179, 0, 0.18), transparent 70%);
+      pointer-events: none;
+    }
+    .result-cta-card > * { position: relative; z-index: 1; }
+    .result-cta-title {
+      font-family: var(--font-display); font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+      font-weight: 500; letter-spacing: -0.02em; line-height: 1.1;
+      margin-bottom: 14px; text-wrap: balance;
+    }
+    .result-cta-title em { font-style: italic; color: var(--accent); font-variation-settings: 'opsz' 144; }
+    .result-cta-sub { color: var(--text-muted); margin-bottom: 28px; font-size: 1rem; line-height: 1.55; max-width: 540px; margin-left: auto; margin-right: auto; }
+
+    @media (max-width: 640px) {
+      .quiz-nav { padding: 14px 18px; }
+      .quiz-progress-label { top: 70px; right: 18px; font-size: 9.5px; }
+      .stage, .screen { padding: 92px 18px 40px; }
+      .screen--result { padding: 100px 18px 60px; }
+      .question-title { font-size: clamp(1.7rem, 6vw, 2.2rem); }
+      .welcome-hero { font-size: clamp(2rem, 9vw, 2.8rem); }
+      .options { gap: 10px; }
+      .option { padding: 16px 18px; }
+      .btn { padding: 14px 26px; font-size: 0.96rem; }
+      .btn--lg { padding: 16px 30px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="quiz-progress" aria-hidden="true">
+    <div class="quiz-progress-fill" id="progressFill"></div>
+  </div>
+  <div class="quiz-progress-label" id="progressLabel" hidden>
+    Etapa <span class="accent" id="progressCurrent">1</span> de <span id="progressTotal">6</span>
+  </div>
+
+  <header class="quiz-nav">
+    <a href="index.html" class="quiz-nav-logo">
+      <img src="assets/img/logo-dros-sales.png" alt="DROS Sales">
+      <span class="quiz-nav-logo-text">DROS · Raio X</span>
+    </a>
+    <button class="quiz-back" id="btnBack" hidden type="button">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" x2="5" y1="12" y2="12"/>
+        <polyline points="12 19 5 12 12 5"/>
+      </svg>
+      Voltar
+    </button>
+  </header>
+
+  <main class="stage" id="stage">
+
+    <!-- WELCOME -->
+    <section class="screen is-active" data-screen="welcome">
+      <div class="screen-inner">
+        <div class="welcome-eyebrow-pill">Raio X Comercial · DROS Sales</div>
+        <h1 class="welcome-hero">Vamos descobrir onde sua indústria está <em>perdendo venda.</em></h1>
+        <p class="welcome-lead">6 perguntas rápidas. Em <strong>60 segundos</strong> a gente mapeia o gargalo do canal — sem proposta empurrada, sem compromisso.</p>
+        <div class="btn-row">
+          <button type="button" class="btn btn--primary btn--lg" data-go-next>Começar o raio x <span class="arrow">→</span></button>
+        </div>
+        <div class="welcome-bullets">
+          <span>60s pra responder</span>
+          <span>100% confidencial</span>
+          <span>Sem custo</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Q1 Segmento -->
+    <section class="screen" data-screen="segmento" data-track-step="1">
+      <div class="screen-inner screen-inner--wide">
+        <span class="eyebrow">01 · Sua indústria</span>
+        <h2 class="question-title">Qual o <em>segmento</em> da sua operação?</h2>
+        <p class="question-sub">Pra adequar a leitura ao tipo de canal que você opera.</p>
+        <div class="options options--grid-2-md" data-q="segmento" data-auto-advance>
+          <button class="option" type="button" data-value="Produto de limpeza"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Produto de limpeza</span></span></button>
+          <button class="option" type="button" data-value="Indústria química"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Indústria química</span></span></button>
+          <button class="option" type="button" data-value="Cosméticos"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Cosméticos</span></span></button>
+          <button class="option" type="button" data-value="Embalagens"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Embalagens</span></span></button>
+          <button class="option" type="button" data-value="Automotivo"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Automotivo</span></span></button>
+          <button class="option" type="button" data-value="Ração animal"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Ração animal</span></span></button>
+          <button class="option" type="button" data-value="ARLA"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">ARLA</span></span></button>
+          <button class="option" type="button" data-value="Metalúrgica"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Metalúrgica</span></span></button>
+          <button class="option" type="button" data-value="Equipamentos"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Equipamentos</span></span></button>
+          <button class="option" type="button" data-value="Alimentos"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Alimentos</span></span></button>
+          <button class="option" type="button" data-value="Outros"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Outros</span></span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Q2 Faturamento -->
+    <section class="screen" data-screen="faturamento" data-track-step="2">
+      <div class="screen-inner">
+        <span class="eyebrow">02 · Volume mensal</span>
+        <h2 class="question-title">Qual o <em>faturamento médio</em> por mês?</h2>
+        <p class="question-sub">Pra calibrar o plano sob a sua realidade de operação.</p>
+        <div class="options" data-q="faturamento" data-auto-advance>
+          <button class="option" type="button" data-value="Até R$ 100 mil"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Até R$ 100 mil</span><span class="option-hint">Operação inicial</span></span></button>
+          <button class="option" type="button" data-value="R$ 100 mil – R$ 500 mil"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">R$ 100 mil – R$ 500 mil</span><span class="option-hint">Em estruturação</span></span></button>
+          <button class="option" type="button" data-value="R$ 500 mil – R$ 1 milhão"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">R$ 500 mil – R$ 1 mi</span><span class="option-hint">Pronto pra escalar</span></span></button>
+          <button class="option" type="button" data-value="R$ 1 mi – R$ 5 mi"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">R$ 1 mi – R$ 5 mi</span><span class="option-hint">Operação consolidada</span></span></button>
+          <button class="option" type="button" data-value="R$ 5 mi – R$ 10 mi"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">R$ 5 mi – R$ 10 mi</span><span class="option-hint">Escala média</span></span></button>
+          <button class="option" type="button" data-value="Acima de R$ 10 mi"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Acima de R$ 10 mi</span><span class="option-hint">Operação madura</span></span></button>
+          <button class="option" type="button" data-value="Prefiro não informar"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Prefiro não informar</span></span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Q3 Expansão -->
+    <section class="screen" data-screen="expansao" data-track-step="3">
+      <div class="screen-inner">
+        <span class="eyebrow">03 · Caminho de crescimento</span>
+        <h2 class="question-title">Como pretende <em>expandir</em> o canal?</h2>
+        <p class="question-sub">Não precisa estar decidido — só a direção que está mais clara hoje.</p>
+        <div class="options" data-q="expansao" data-auto-advance>
+          <button class="option" type="button" data-value="Revendedores"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Revendedores</span><span class="option-hint">Capilaridade regional</span></span></button>
+          <button class="option" type="button" data-value="E-commerce"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">E-commerce</span><span class="option-hint">Venda direta online</span></span></button>
+          <button class="option" type="button" data-value="Marketplaces"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Marketplaces</span><span class="option-hint">Mercado Livre, Shopee, etc</span></span></button>
+          <button class="option" type="button" data-value="Franquias"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Franquias</span><span class="option-hint">Modelo padronizado</span></span></button>
+          <button class="option" type="button" data-value="Não sei ainda"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Ainda não sei</span><span class="option-hint">A gente conversa sobre isso</span></span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Q4 Anuncia -->
+    <section class="screen" data-screen="anuncia" data-track-step="4">
+      <div class="screen-inner">
+        <span class="eyebrow">04 · Aquisição</span>
+        <h2 class="question-title">Investe em <em>anúncios online</em> hoje?</h2>
+        <p class="question-sub">Meta, Google, TikTok, LinkedIn — qualquer plataforma de mídia paga.</p>
+        <div class="options options--grid-2" data-q="anuncia" data-auto-advance>
+          <button class="option" type="button" data-value="sim"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Sim, já invisto</span></span></button>
+          <button class="option" type="button" data-value="nao"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Ainda não</span></span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Q5 Plataformas (cond) -->
+    <section class="screen" data-screen="plataformas" data-track-step="5">
+      <div class="screen-inner">
+        <span class="eyebrow">05 · Onde anuncia</span>
+        <h2 class="question-title">Em quais <em>plataformas</em>?</h2>
+        <p class="question-sub">Pode marcar mais de uma.</p>
+        <div class="options options--grid-2" data-q="plataformas" data-multi>
+          <button class="option" type="button" data-value="Meta Ads"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Meta Ads</span><span class="option-hint">Facebook + Instagram</span></span></button>
+          <button class="option" type="button" data-value="Google Ads"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Google Ads</span><span class="option-hint">Search + YouTube + Display</span></span></button>
+          <button class="option" type="button" data-value="TikTok Ads"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">TikTok Ads</span></span></button>
+          <button class="option" type="button" data-value="LinkedIn Ads"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">LinkedIn Ads</span></span></button>
+        </div>
+        <div class="btn-row">
+          <button type="button" class="btn btn--primary" data-go-next>Continuar <span class="arrow">→</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Q6 Maior gargalo (substitui identificacao — vira o último que fecha o raio x) -->
+    <section class="screen" data-screen="gargalo" data-track-step="6">
+      <div class="screen-inner">
+        <span class="eyebrow">06 · O que mais pesa</span>
+        <h2 class="question-title">Qual <em>gargalo</em> mais pesa no canal hoje?</h2>
+        <p class="question-sub">Escolhe o que melhor descreve sua dor maior — vai ajudar a focar o raio x.</p>
+        <div class="options" data-q="gargalo" data-auto-advance>
+          <button class="option" type="button" data-value="Cliente antigo sumindo"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Cliente antigo sumindo</span><span class="option-hint">Recompra fraca, base esquecida</span></span></button>
+          <button class="option" type="button" data-value="WhatsApp sem processo"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">WhatsApp sem processo</span><span class="option-hint">Mensagem que cai, sem rastreio</span></span></button>
+          <button class="option" type="button" data-value="Dependência de indicação"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Dependência de indicação</span><span class="option-hint">Boca a boca não dá pra escalar</span></span></button>
+          <button class="option" type="button" data-value="Regiões vazias"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Regiões vazias</span><span class="option-hint">Cidades inteiras sem cobertura</span></span></button>
+          <button class="option" type="button" data-value="Representante sem rastreio"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Representante sem rastreio</span><span class="option-hint">Não dá pra acompanhar a operação</span></span></button>
+          <button class="option" type="button" data-value="Venda oscilando"><span class="option-marker"><svg><polyline points="20 6 9 17 4 12"/></svg></span><span class="option-content"><span class="option-label">Venda oscilando</span><span class="option-hint">Um mês vai, outro não</span></span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESULTADO -->
+    <section class="screen screen--result" data-screen="resultado">
+      <div class="screen-inner screen-inner--result">
+        <div class="result-eyebrow-pill">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Seu raio x está pronto
+        </div>
+        <h1 class="result-hero-title">Olha o que <em>encontramos</em> no seu canal.</h1>
+        <p class="result-hero-sub">Leitura rápida em cima do que você respondeu. O diagnóstico completo, a gente faz junto numa conversa de 30 min.</p>
+
+        <div class="result-snapshot">
+          <div class="result-stat">
+            <div class="result-stat-label">Segmento</div>
+            <div class="result-stat-value" id="resSegmento">—</div>
+          </div>
+          <div class="result-stat">
+            <div class="result-stat-label">Volume mensal</div>
+            <div class="result-stat-value" id="resFaturamento">—</div>
+          </div>
+          <div class="result-stat">
+            <div class="result-stat-label">Caminho de crescimento</div>
+            <div class="result-stat-value" id="resExpansao">—</div>
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="result-card-eyebrow">Gargalo principal identificado</div>
+          <h3 class="result-card-title" id="resGargaloTitle">—</h3>
+          <p class="result-card-body" id="resGargaloBody">—</p>
+        </div>
+
+        <div class="result-card">
+          <div class="result-card-eyebrow">3 movimentos prioritários</div>
+          <h3 class="result-card-title">Por onde a <em>DROS</em> começaria.</h3>
+          <div class="insights-list" id="resInsights">
+            <!-- preenchido por JS -->
+          </div>
+        </div>
+
+        <div class="result-cta-card">
+          <h2 class="result-cta-title">Quer o <em>diagnóstico completo</em>?</h2>
+          <p class="result-cta-sub">Em 30 minutos a gente olha tua operação inteira, monta um plano sob medida e mostra onde a venda pode crescer primeiro. Sem proposta empurrada.</p>
+          <div class="btn-row">
+            <a href="diagnostico.html" class="btn btn--primary btn--lg" id="ctaDiagnostico">Quero o diagnóstico completo <span class="arrow">→</span></a>
+            <a href="index.html" class="btn btn--ghost btn--lg">Voltar ao site</a>
+          </div>
+          <div class="trust-micro">
+            <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            100% confidencial · 30 min · sem compromisso
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== QUIZ ENGINE ===== -->
+  <script type="module">
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let motion = null;
+    if (!reduce) {
+      try { motion = await import('https://cdn.jsdelivr.net/npm/motion@10.18.0/+esm'); }
+      catch (e) { console.warn('motion failed to load', e); }
+    }
+
+    const screens = Array.from(document.querySelectorAll('.screen'));
+    const stage = document.getElementById('stage');
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progressLabel');
+    const progressCurrent = document.getElementById('progressCurrent');
+    const progressTotal = document.getElementById('progressTotal');
+    const btnBack = document.getElementById('btnBack');
+
+    const screenOrder = ['welcome','segmento','faturamento','expansao','anuncia','plataformas','gargalo','resultado'];
+    const trackable = ['segmento','faturamento','expansao','anuncia','plataformas','gargalo'];
+    progressTotal.textContent = trackable.length;
+
+    const state = { data: {}, history: ['welcome'] };
+
+    const getScreen = (name) => screens.find((s) => s.dataset.screen === name);
+
+    const transitionTo = async (toName, direction = 'fwd') => {
+      const fromEl = screens.find((s) => s.classList.contains('is-active'));
+      const toEl = getScreen(toName);
+      if (!toEl || fromEl === toEl) return;
+
+      const dx = direction === 'fwd' ? 40 : -40;
+
+      if (motion) {
+        await motion.animate(fromEl,
+          { opacity: [1, 0], transform: ['translateX(0px)', `translateX(${-dx}px)`] },
+          { duration: 0.32, easing: [0.32, 0, 0.67, 0] }
+        ).finished;
+      }
+      fromEl.classList.remove('is-active');
+
+      // Se for tela de resultado, permitir scroll
+      if (toName === 'resultado') {
+        document.body.classList.add('is-result');
+        document.documentElement.style.overflow = 'auto';
+      } else {
+        document.body.classList.remove('is-result');
+        document.documentElement.style.overflow = 'hidden';
+      }
+
+      toEl.classList.add('is-active');
+      restoreFromState(toEl);
+
+      if (toName === 'resultado') renderResultado();
+
+      if (motion) {
+        const bits = toEl.querySelectorAll('.eyebrow, .welcome-eyebrow-pill, .result-eyebrow-pill, .question-title, .welcome-hero, .result-hero-title, .question-sub, .welcome-lead, .result-hero-sub, .result-snapshot, .result-card, .result-cta-card, .options, .field, .btn-row, .welcome-bullets, .trust-micro');
+        motion.animate(toEl, { opacity: [0, 1], transform: [`translateX(${dx}px)`, 'translateX(0px)'] },
+          { duration: 0.45, easing: [0.22, 1, 0.36, 1] });
+        bits.forEach((el, i) => {
+          el.style.opacity = '0';
+          el.style.transform = 'translateY(20px)';
+          motion.animate(el, { opacity: [0, 1], transform: ['translateY(20px)', 'translateY(0)'] },
+            { duration: 0.55, delay: 0.1 + i * 0.07, easing: [0.22, 1, 0.36, 1] });
+        });
+      }
+
+      // scroll top em telas com scroll
+      if (toName === 'resultado') {
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'instant' }), 0);
+      }
+
+      updateProgress(toName);
+    };
+
+    const updateProgress = (name) => {
+      const idx = trackable.indexOf(name);
+      if (name === 'resultado') {
+        progressFill.style.width = '100%';
+        progressLabel.hidden = true;
+        btnBack.hidden = true;
+        return;
+      }
+      if (idx === -1) {
+        progressFill.style.width = name === 'welcome' ? '0%' : '100%';
+        progressLabel.hidden = true;
+        btnBack.hidden = true;
+        return;
+      }
+      const pct = ((idx + 1) / trackable.length) * 100;
+      progressFill.style.width = pct + '%';
+      progressLabel.hidden = false;
+      progressCurrent.textContent = idx + 1;
+      btnBack.hidden = state.history.length <= 1;
+    };
+
+    const restoreFromState = (screenEl) => {
+      const groups = screenEl.querySelectorAll('[data-q]');
+      groups.forEach((g) => {
+        const q = g.dataset.q;
+        const val = state.data[q];
+        if (g.dataset.multi !== undefined) {
+          if (Array.isArray(val)) {
+            g.querySelectorAll('.option').forEach((opt) => {
+              opt.classList.toggle('is-selected', val.includes(opt.dataset.value));
+            });
+          }
+        } else if (g.tagName === 'INPUT' || g.classList.contains('field-input')) {
+          if (val !== undefined) g.value = val;
+        } else {
+          g.querySelectorAll('.option').forEach((opt) => {
+            opt.classList.toggle('is-selected', opt.dataset.value === val);
+          });
+        }
+      });
+    };
+
+    const computeNextScreen = (current) => {
+      const idx = screenOrder.indexOf(current);
+      if (idx === -1 || idx >= screenOrder.length - 1) return null;
+      let next = screenOrder[idx + 1];
+      // Pula plataformas se anuncia === 'nao' (vai direto pra gargalo)
+      if (current === 'anuncia' && state.data.anuncia === 'nao') {
+        return 'gargalo';
+      }
+      return next;
+    };
+
+    const computePrevScreen = () => {
+      if (state.history.length <= 1) return null;
+      state.history.pop();
+      return state.history[state.history.length - 1];
+    };
+
+    const goNext = () => {
+      const cur = state.history[state.history.length - 1];
+      const curScreen = getScreen(cur);
+      if (cur === 'plataformas') {
+        const selected = Array.from(curScreen.querySelectorAll('.option.is-selected')).map((o) => o.dataset.value);
+        state.data.plataformas = selected;
+      }
+      const next = computeNextScreen(cur);
+      if (!next) return;
+      state.history.push(next);
+      transitionTo(next, 'fwd');
+    };
+
+    const goBack = () => {
+      const prev = computePrevScreen();
+      if (!prev) return;
+      transitionTo(prev, 'back');
+    };
+
+    // Wire options
+    document.querySelectorAll('[data-q]').forEach((group) => {
+      if (group.tagName === 'INPUT') return;
+      const q = group.dataset.q;
+      const multi = group.dataset.multi !== undefined;
+      const autoAdvance = group.dataset.autoAdvance !== undefined;
+
+      group.querySelectorAll('.option').forEach((opt) => {
+        opt.addEventListener('click', () => {
+          const val = opt.dataset.value;
+          if (multi) {
+            opt.classList.toggle('is-selected');
+            const selected = Array.from(group.querySelectorAll('.option.is-selected')).map((o) => o.dataset.value);
+            state.data[q] = selected;
+          } else {
+            group.querySelectorAll('.option').forEach((o) => o.classList.remove('is-selected'));
+            opt.classList.add('is-selected');
+            state.data[q] = val;
+            if (motion) {
+              motion.animate(opt, { transform: ['translateY(-2px) scale(1)', 'translateY(-2px) scale(1.02)', 'translateY(-2px) scale(1)'] },
+                { duration: 0.3, easing: 'ease-out' });
+            }
+            if (autoAdvance) setTimeout(() => goNext(), 280);
+          }
+        });
+      });
+    });
+
+    document.querySelectorAll('[data-go-next]').forEach((b) => b.addEventListener('click', goNext));
+    btnBack.addEventListener('click', goBack);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const cur = state.history[state.history.length - 1];
+        if (cur !== 'welcome' && cur !== 'resultado') {
+          e.preventDefault();
+          goNext();
+        }
+      }
+    });
+
+    // ===== RESULTADO DINÂMICO =====
+    const GARGALO_INSIGHTS = {
+      'Cliente antigo sumindo': {
+        title: 'Sua base já tem dinheiro pronto pra ser destravado.',
+        body: 'A maior alavanca aqui não é trazer cliente novo — é reativar quem já comprou. Boa parte da receita rápida está numa cadência simples de recompra + uma régua de WhatsApp pros antigos que sumiram.'
+      },
+      'WhatsApp sem processo': {
+        title: 'Mensagem que entra mas não vira pedido custa caro.',
+        body: 'Sem um processo de atendimento e rastreio, cada hora de demora em responder vira venda perdida. O primeiro ganho aqui é estruturar atendimento + CRM básico — geralmente devolve 15–30% de oportunidades já no primeiro mês.'
+      },
+      'Dependência de indicação': {
+        title: 'Boca a boca trouxe até aqui — mas tem teto.',
+        body: 'Indicação é ótima, só que não escala. A virada é entrar com aquisição paga (Meta + Google) na região onde já tem cliente, replicando o perfil ideal — sem trocar o que funciona, só somando.'
+      },
+      'Regiões vazias': {
+        title: 'O mapa do canal está com buracos de oportunidade.',
+        body: 'Tem cidade e revendedor que poderia comprar e não compra porque ninguém vai atrás. Anúncio geo-segmentado por região + ativação de revendedor são os movimentos que mais entregam pedido novo aqui.'
+      },
+      'Representante sem rastreio': {
+        title: 'Operação sem número vira opinião.',
+        body: 'Se você não tem dado por representante, fica preso no achismo. Primeiro passo: instalar CRM + relatório semanal por região/rep. Sem isso, qualquer mudança de comissão ou rota é chute.'
+      },
+      'Venda oscilando': {
+        title: 'Faturamento que oscila = canal dependendo de sorte.',
+        body: 'O mês bom encobre o mês ruim. Pra previsibilidade, precisa entrar com aquisição contínua + base de pipeline acompanhada toda semana. Resultado: piso mais alto e oscilação menor.'
+      }
+    };
+
+    const baseInsights = (data) => {
+      const out = [];
+      // Insight 1 — sempre baseado no anuncia
+      if (data.anuncia === 'nao') {
+        out.push({
+          num: '01',
+          title: 'Entrar em aquisição paga com calibragem por região.',
+          body: 'Sem mídia paga, você depende 100% de indicação e tráfego orgânico. O primeiro movimento DROS é abrir Meta + Google focados em <strong>quem realmente compra</strong> — comprador certo na região certa.'
+        });
+      } else {
+        const plats = (data.plataformas || []).join(', ');
+        out.push({
+          num: '01',
+          title: 'Auditar o que já roda e cortar o que sangra.',
+          body: `Você já anuncia ${plats ? `em ${plats}` : 'online'}. O primeiro passo aqui não é gastar mais — é entender se o anúncio está caindo no público certo (revendedor x consumidor) e onde está o vazamento de orçamento.`
+        });
+      }
+
+      // Insight 2 — baseado em expansão
+      const expMap = {
+        'Revendedores': {
+          title: 'Ativar revendedor é meia-estrutura de canal.',
+          body: 'Revendedor capta capilaridade, mas precisa de processo: cadastro, política comercial clara, suporte rápido e rastreio. Sem isso, vira lista de contato perdida.'
+        },
+        'E-commerce': {
+          title: 'E-commerce próprio só decola com tráfego intencional.',
+          body: 'Site bonito não vende sozinho. O canal direto-ao-consumidor precisa de aquisição paga + recorrência + recuperação de carrinho pra se pagar.'
+        },
+        'Marketplaces': {
+          title: 'Marketplace é volume rápido, margem comprimida.',
+          body: 'ML, Shopee, Amazon trazem volume — mas a margem cai. A pergunta certa é se faz sentido como porta de entrada ou se é o caminho principal mesmo.'
+        },
+        'Franquias': {
+          title: 'Franquia exige operação de marca, não só de produto.',
+          body: 'Pra escalar franquia, a marca precisa de força nacional, manual operacional sólido e atração de candidato. É um movimento mais pesado e dá fruto a médio prazo.'
+        },
+        'Não sei ainda': {
+          title: 'Antes de escolher o caminho, mapear a operação atual.',
+          body: 'Decidir entre revendedor, e-commerce ou marketplace sem entender onde a venda atual está travando é jogo de tentativa e erro caro. O raio x completo ajuda a escolher o caminho certo.'
+        }
+      };
+      const expInsight = expMap[data.expansao] || expMap['Não sei ainda'];
+      out.push({ num: '02', title: expInsight.title, body: expInsight.body });
+
+      // Insight 3 — sempre fala de processo/comercial
+      out.push({
+        num: '03',
+        title: 'Estruturar o pós-clique: WhatsApp, CRM e acompanhamento.',
+        body: 'Aquisição traz oportunidade. O <strong>comercial</strong> é quem transforma em pedido. Sem processo no atendimento, todo investimento em anúncio vaza no primeiro contato que cai.'
+      });
+
+      return out;
+    };
+
+    const renderResultado = () => {
+      const data = state.data;
+      const safe = (v) => v && v.trim ? v.trim() : (v || '—');
+
+      document.getElementById('resSegmento').textContent = safe(data.segmento);
+      document.getElementById('resFaturamento').textContent = safe(data.faturamento);
+      document.getElementById('resExpansao').textContent = safe(data.expansao);
+
+      const gargalo = GARGALO_INSIGHTS[data.gargalo] || {
+        title: 'Tem oportunidade pra organizar o canal.',
+        body: 'A gente olha tua operação inteira no diagnóstico completo e mostra onde a venda pode crescer primeiro.'
+      };
+      document.getElementById('resGargaloTitle').innerHTML = gargalo.title.replace(/^(.+?)\b(.+)$/, (m, a, b) => `${a}<em>${b}</em>`);
+      // mais simples: só coloca como texto, e adiciona italic na última palavra
+      const titleEl = document.getElementById('resGargaloTitle');
+      const words = gargalo.title.split(' ');
+      if (words.length > 3) {
+        const last = words.slice(-2).join(' ');
+        const rest = words.slice(0, -2).join(' ');
+        titleEl.innerHTML = rest + ' <em>' + last + '</em>';
+      } else {
+        titleEl.textContent = gargalo.title;
+      }
+      document.getElementById('resGargaloBody').textContent = gargalo.body;
+
+      const insights = baseInsights(data);
+      const cont = document.getElementById('resInsights');
+      cont.innerHTML = insights.map((ins) => `
+        <div class="insight">
+          <div class="insight-num">${ins.num}</div>
+          <div class="insight-body">
+            <h4>${ins.title}</h4>
+            <p>${ins.body}</p>
+          </div>
+        </div>
+      `).join('');
+
+      // append quiz answers ao link do diagnostico via querystring (opcional, ajuda a pré-preencher)
+      const cta = document.getElementById('ctaDiagnostico');
+      const qs = new URLSearchParams();
+      Object.entries(data).forEach(([k, v]) => {
+        if (Array.isArray(v)) qs.set(k, v.join(','));
+        else if (v) qs.set(k, v);
+      });
+      qs.set('from', 'raio-x');
+      cta.href = 'diagnostico.html?' + qs.toString();
+    };
+
+    updateProgress('welcome');
+  </script>
+
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1112856240610448');
+  fbq('track', 'PageView');
+  fbq('track', 'ViewContent', { content_name: 'Raio X Comercial', content_category: 'industria' });
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1112856240610448&ev=PageView&noscript=1" alt=""/></noscript>
+
+</body>
+</html>

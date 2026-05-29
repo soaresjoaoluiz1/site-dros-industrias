@@ -995,6 +995,97 @@
     if (casesWrap) makeCarousel(casesWrap, '.case-slide', '.case-dot', 8000);
   </script>
 
+  <!-- ===== MOTION ONE — reveal-on-scroll + micro-interactions =====
+       Lightweight (5KB), uses Web Animations API natively.
+       Auto-detects prefers-reduced-motion. -->
+  <script type="module">
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduce) {
+      try {
+        const { animate, inView, stagger } = await import('https://cdn.jsdelivr.net/npm/motion@10.18.0/+esm');
+
+        // 1) Hero entry — entra escalonado no load
+        const heroBits = document.querySelectorAll('.hero .eyebrow, .hero .h1, .hero .lead, .hero .btn-row, .hero-bullets');
+        heroBits.forEach((el, i) => {
+          el.style.opacity = '0';
+          el.style.transform = 'translateY(24px)';
+          animate(el, { opacity: [0, 1], transform: ['translateY(24px)', 'translateY(0px)'] },
+            { duration: 0.85, delay: 0.15 + i * 0.12, easing: [0.22, 1, 0.36, 1] });
+        });
+
+        // 2) Reveal-on-scroll: títulos de seção
+        const headings = document.querySelectorAll('.section .eyebrow, .section h2, .section .lead, .h2');
+        headings.forEach((el) => {
+          el.style.opacity = '0';
+          el.style.transform = 'translateY(28px)';
+          inView(el, () => {
+            animate(el, { opacity: [0, 1], transform: ['translateY(28px)', 'translateY(0)'] },
+              { duration: 0.9, easing: [0.22, 1, 0.36, 1] });
+          }, { margin: '0px 0px -120px 0px' });
+        });
+
+        // 3) Reveal escalonado: grids de cards (problemas, método, vision, segments, stats)
+        const gridSelectors = ['.problems-grid', '.method-grid', '.cases-grid', '.vision-grid',
+                               '.segments-grid', '.testimonials-grid', '.stats-row', '.data-grid',
+                               '.tech-grid', '.diag-checklist', '.diag-steps', '.steps-list'];
+        gridSelectors.forEach((sel) => {
+          document.querySelectorAll(sel).forEach((grid) => {
+            const items = grid.children;
+            Array.from(items).forEach((c) => {
+              c.style.opacity = '0';
+              c.style.transform = 'translateY(36px) scale(0.97)';
+            });
+            inView(grid, () => {
+              animate(Array.from(items),
+                { opacity: [0, 1], transform: ['translateY(36px) scale(0.97)', 'translateY(0) scale(1)'] },
+                { duration: 0.7, delay: stagger(0.08), easing: [0.22, 1, 0.36, 1] });
+            }, { margin: '0px 0px -80px 0px' });
+          });
+        });
+
+        // 4) Number count-up nos stats grandes
+        const animateNum = (el) => {
+          const txt = el.textContent.trim();
+          const match = txt.match(/([+R$\s]*)(\d[\d.,]*)(.*)/);
+          if (!match) return;
+          const prefix = match[1], raw = match[2], suffix = match[3];
+          const target = parseFloat(raw.replace(/\./g, '').replace(',', '.'));
+          if (isNaN(target) || target === 0) return;
+          const isInt = !raw.includes(',');
+          const dur = 1400;
+          const start = performance.now();
+          const fmt = (n) => {
+            if (isInt) return Math.round(n).toLocaleString('pt-BR');
+            return n.toFixed(1).replace('.', ',');
+          };
+          const tick = (now) => {
+            const t = Math.min(1, (now - start) / dur);
+            const eased = 1 - Math.pow(1 - t, 3);
+            el.textContent = prefix + fmt(target * eased) + suffix;
+            if (t < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        };
+        document.querySelectorAll('.stat-num, .data-num').forEach((el) => {
+          const orig = el.textContent;
+          inView(el, () => { animateNum(el); el.dataset.orig = orig; }, { margin: '0px 0px -60px 0px' });
+        });
+
+        // 5) Botões primários com pulso sutil contínuo
+        document.querySelectorAll('[data-motion="cta-pulse"]').forEach((btn) => {
+          animate(btn, { transform: ['translateY(0)', 'translateY(-2px)', 'translateY(0)'] },
+            { duration: 2.8, repeat: Infinity, easing: 'ease-in-out' });
+        });
+
+        // 6) Hover lift suave em cards
+        document.querySelectorAll('.method-card, .problem-card, .case-slide, .vision-card, .tech-card').forEach((c) => {
+          c.addEventListener('mouseenter', () => animate(c, { transform: 'translateY(-6px)' }, { duration: 0.3 }));
+          c.addEventListener('mouseleave', () => animate(c, { transform: 'translateY(0)' }, { duration: 0.3 }));
+        });
+      } catch (err) { console.warn('motion failed', err); }
+    }
+  </script>
+
   <!-- Meta Pixel Code (deferido — não bloqueia first paint) -->
   <script>
   !function(f,b,e,v,n,t,s)
