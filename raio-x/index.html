@@ -4,31 +4,62 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>DROS Sales · Raio-X Comercial da Indústria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
   :root{
-    --bg:#0a0e15; --bg2:#0f1622; --card:#141c2a; --line:#202c3e;
-    --gold:#f5b50a; --gold2:#ffce4d; --white:#f3f6fb; --mut:#8593a8; --mut2:#5d6a7e;
-    --green:#34c98a; --red:#e8604c; --amber:#f3a826; --blue:#5b9cf0;
+    /* paleta alinhada com /industria — dark bg, amber accent */
+    --bg:#0a1018; --bg2:#0d141d; --bg-deep:#06090e;
+    --card:rgba(255,255,255,0.04); --card-hi:rgba(255,255,255,0.06);
+    --line:rgba(255,255,255,0.08); --line-hi:rgba(255,255,255,0.14);
+    --gold:#ffb300; --gold2:#f59e0b;
+    --white:#ffffff; --mut:rgba(255,255,255,0.70); --mut2:rgba(255,255,255,0.48);
+    --green:#22a75d; --red:#ff6868; --amber:#ffb300; --blue:#5b9cf0;
+    --ease:cubic-bezier(0.22,1,0.36,1);
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--white);min-height:100vh}
-  .wrap{max-width:880px;margin:0 auto;padding:0 20px}
-  header{display:flex;justify-content:space-between;align-items:center;padding:24px 0 8px}
+  html,body{font-feature-settings:'cv02','cv03','cv11'}
+  body{
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    background:
+      radial-gradient(ellipse at top, rgba(255,179,0,0.08), transparent 55%),
+      radial-gradient(ellipse at bottom, rgba(255,179,0,0.05), transparent 60%),
+      var(--bg);
+    color:var(--white);min-height:100vh;-webkit-font-smoothing:antialiased;
+    position:relative;
+  }
+  body::before{
+    content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.035;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px;position:relative;z-index:1}
+  header{display:flex;justify-content:space-between;align-items:center;padding:28px 0 8px}
   .logo{display:flex;align-items:center;gap:10px}
-  .logo-mark{width:34px;height:34px;border-radius:9px;background:var(--gold);color:#000;font-weight:800;display:grid;place-items:center;font-size:15px}
-  .fade{animation:f .45s ease both}
-  @keyframes f{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-  .bar{transition:width .6s cubic-bezier(.2,.8,.2,1)}
-  .btn{transition:transform .14s,box-shadow .2s,background .2s,border-color .2s;cursor:pointer}
+  .fade{animation:f .55s var(--ease) both}
+  @keyframes f{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .slideIn{animation:sl .42s var(--ease) both}
+  @keyframes sl{from{opacity:0;transform:translateX(34px)}to{opacity:1;transform:translateX(0)}}
+  .bar{transition:width .7s var(--ease)}
+  .btn{transition:transform .18s var(--ease),box-shadow .25s var(--ease),background .22s,border-color .22s,color .22s;cursor:pointer}
   .btn:hover{transform:translateY(-2px)}
-  .opt:hover{border-color:var(--gold)!important;background:var(--bg2)!important}
-  .num:hover{transform:scale(1.07)}
-  input.inp{background:var(--bg2);border:1px solid var(--line);color:var(--white);border-radius:12px;padding:16px;font-size:20px;font-weight:700;width:100%;outline:none;font-family:inherit}
-  input.inp:focus{border-color:var(--gold)}
+  .opt{transition:all .25s var(--ease)}
+  .opt:hover{border-color:var(--gold)!important;background:var(--card-hi)!important;transform:translateY(-2px)}
+  .opt.is-just-picked{box-shadow:0 0 0 4px rgba(255,179,0,0.18), 0 16px 32px rgba(255,179,0,0.15)}
+  .num:hover{transform:scale(1.08)}
+  input.inp{background:var(--card);border:1px solid var(--line);color:var(--white);border-radius:12px;padding:16px;font-size:20px;font-weight:700;width:100%;outline:none;font-family:inherit;transition:all .25s var(--ease)}
+  input.inp:focus{border-color:var(--gold);background:var(--card-hi);box-shadow:0 0 0 4px rgba(255,179,0,0.14)}
   footer{text-align:center;color:var(--mut2);font-size:12px;padding:44px 0 28px;border-top:1px solid var(--line);margin-top:50px}
   .twocol{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .stagger > *{opacity:0;animation:f .55s var(--ease) forwards}
+  .stagger > *:nth-child(1){animation-delay:.05s} .stagger > *:nth-child(2){animation-delay:.12s}
+  .stagger > *:nth-child(3){animation-delay:.19s} .stagger > *:nth-child(4){animation-delay:.26s}
+  .stagger > *:nth-child(5){animation-delay:.33s} .stagger > *:nth-child(6){animation-delay:.40s}
+  .stagger > *:nth-child(7){animation-delay:.47s} .stagger > *:nth-child(8){animation-delay:.54s}
   @media(max-width:640px){.twocol{grid-template-columns:1fr}}
+  @media(prefers-reduced-motion: reduce){
+    .fade,.slideIn,.stagger > *{animation:none!important;opacity:1!important;transform:none!important}
+  }
 </style>
 </head>
 <body>
@@ -50,9 +81,9 @@ const CONTATO = {
 };
 
 const C = {
-  bg:"#0a0e15", bg2:"#0f1622", card:"#141c2a", line:"#202c3e",
-  gold:"#f5b50a", gold2:"#ffce4d", white:"#f3f6fb", mut:"#8593a8", mut2:"#5d6a7e",
-  green:"#34c98a", red:"#e8604c", amber:"#f3a826", blue:"#5b9cf0",
+  bg:"#0a1018", bg2:"#0d141d", card:"rgba(255,255,255,0.04)", cardHi:"rgba(255,255,255,0.07)", line:"rgba(255,255,255,0.10)",
+  gold:"#ffb300", gold2:"#f59e0b", white:"#ffffff", mut:"rgba(255,255,255,0.70)", mut2:"rgba(255,255,255,0.48)",
+  green:"#22a75d", red:"#ff6868", amber:"#ffb300", blue:"#5b9cf0",
 };
 
 const BENCH = { investPctIdeal:8, investPctMin:5, novosIdealPct:4, dependenciaMax:30, indicacaoMax:50, followupIdeal:70 };
@@ -211,16 +242,17 @@ function App(){
 function Intro({total,onStart}){
   const blocks=[["Seus números","Faturamento, ticket, clientes e novos."],["Sua dependência","Quanto pesa indicação e os maiores clientes."],["Seus canais","Como você traz cliente e o que dá pedido."],["Sua maturidade","Previsibilidade, processo e gestão."]];
   return e("section",{className:"fade",style:{padding:"38px 0 10px"}},
-    e("span",{style:{fontSize:12,fontWeight:700,letterSpacing:2,color:C.gold,textTransform:"uppercase"}},"Raio-X comercial da indústria"),
-    e("h1",{style:{fontSize:"clamp(34px,6vw,56px)",lineHeight:1.04,fontWeight:800,letterSpacing:-1,margin:"16px 0 18px"}},"Sua empresa cresce",e("br"),"ou só ",e("span",{style:{color:C.gold}},"trabalha mais?")),
+    e("span",{style:{display:"inline-flex",alignItems:"center",gap:8,padding:"7px 16px 7px 12px",background:"rgba(255,179,0,0.10)",border:"1px solid rgba(255,179,0,0.28)",borderRadius:100,fontSize:11,fontWeight:700,letterSpacing:"0.18em",color:C.gold,textTransform:"uppercase"}},
+      e("span",{style:{width:6,height:6,borderRadius:"50%",background:C.gold,boxShadow:"0 0 0 4px rgba(255,179,0,0.22)"}}),"Raio-X comercial da indústria"),
+    e("h1",{style:{fontSize:"clamp(36px,6.5vw,60px)",lineHeight:1.0,fontWeight:800,letterSpacing:"-0.03em",margin:"20px 0 20px"}},"Sua empresa cresce",e("br"),"ou só ",e("span",{style:{color:C.gold}},"trabalha mais?")),
     e("p",{style:{fontSize:"clamp(16px,2.4vw,19px)",color:C.mut,maxWidth:640,lineHeight:1.55,margin:"0 0 12px"}},"Responda perguntas simples sobre o dia a dia da sua operação e receba um diagnóstico real: como você está ",e("b",{style:{color:C.white}},"comparado à média do setor"),", onde está travando e ",e("b",{style:{color:C.white}},"quanto dá pra destravar")," em faturamento."),
     e("p",{style:{fontSize:14,color:C.mut2,margin:"0 0 30px"}},"Não sabe algum número? Sem problema — tem a opção \"não sei dizer\", e isso também faz parte da análise."),
-    e("button",{onClick:onStart,className:"btn",style:{background:C.gold,color:"#000",border:"none",borderRadius:12,padding:"16px 30px",fontSize:16,fontWeight:800,boxShadow:"0 12px 30px -8px "+C.gold+"66"}},"Começar meu raio-X →"),
-    e("p",{style:{fontSize:13,color:C.mut2,marginTop:14}},"~3 minutos · seus dados ficam entre você e a DROS"),
-    e("div",{style:{marginTop:42,display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))",gap:12}},
-      blocks.map((b,k)=>e("div",{key:k,style:{background:C.card,border:"1px solid "+C.line,borderRadius:16,padding:20}},
-        e("div",{style:{color:C.gold,fontWeight:800,fontSize:13,marginBottom:8}},String(k+1).padStart(2,"0")),
-        e("div",{style:{fontWeight:700,fontSize:16,marginBottom:6}},b[0]),
+    e("button",{onClick:onStart,className:"btn",style:{background:"linear-gradient(135deg,"+C.gold+","+C.gold2+")",color:"#0a0a0f",border:"none",borderRadius:100,padding:"18px 34px",fontSize:16,fontWeight:700,boxShadow:"0 14px 36px rgba(255,179,0,0.32), inset 0 1px 0 rgba(255,255,255,0.25)"}},"Começar meu raio-X →"),
+    e("p",{style:{fontSize:13,color:C.mut2,marginTop:14,letterSpacing:"0.04em"}},"~3 minutos · seus dados ficam entre você e a DROS"),
+    e("div",{className:"stagger",style:{marginTop:48,display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:12}},
+      blocks.map((b,k)=>e("div",{key:k,style:{background:C.card,border:"1px solid "+C.line,borderRadius:16,padding:22,transition:"all .3s var(--ease)"}},
+        e("div",{style:{color:C.gold,fontWeight:800,fontSize:13,marginBottom:8,letterSpacing:"0.02em"}},String(k+1).padStart(2,"0")),
+        e("div",{style:{fontWeight:700,fontSize:16,marginBottom:6,letterSpacing:"-0.012em"}},b[0]),
         e("div",{style:{color:C.mut,fontSize:13.5,lineHeight:1.5}},b[1])
       ))
     )
@@ -229,43 +261,48 @@ function Intro({total,onStart}){
 
 function Quiz({step,i,total,value,answered,onSet,onNext,onPrev}){
   const canNS=step.canNS!==false&&!step.noNS&&step.type!=="select"&&step.type!=="multi";
-  return e("section",{className:"fade",key:step.id,style:{padding:"18px 0 10px"}},
+  // auto-advance só pra tipos de clique direto: select, faixa, escala
+  const autoNext=(v)=>{
+    onSet(v);
+    setTimeout(()=>onNext(), 320);
+  };
+  return e("section",{className:"slideIn",key:step.id,style:{padding:"18px 0 10px"}},
     e("div",{style:{display:"flex",alignItems:"center",gap:14,marginBottom:26}},
-      e("div",{style:{flex:1,height:8,background:C.card,borderRadius:8,overflow:"hidden"}},
-        e("div",{className:"bar",style:{width:(i/total*100)+"%",height:"100%",background:"linear-gradient(90deg,"+C.gold+","+C.gold2+")"}})),
-      e("span",{style:{fontSize:13,color:C.mut,fontWeight:700,whiteSpace:"nowrap"}},(i+1)+"/"+total)
+      e("div",{style:{flex:1,height:6,background:"rgba(255,255,255,0.06)",borderRadius:8,overflow:"hidden"}},
+        e("div",{className:"bar",style:{width:(i/total*100)+"%",height:"100%",background:"linear-gradient(90deg,"+C.gold2+","+C.gold+")",boxShadow:"0 0 14px rgba(255,179,0,0.45)"}})),
+      e("span",{style:{fontFamily:"'Inter',sans-serif",fontSize:11.5,color:C.mut,fontWeight:700,whiteSpace:"nowrap",letterSpacing:"0.08em"}},"ETAPA "+(i+1)+"/"+total)
     ),
-    e("span",{style:{fontSize:12,fontWeight:700,letterSpacing:1.5,color:C.gold,textTransform:"uppercase"}},step.block),
-    e("h2",{style:{fontSize:"clamp(22px,3.8vw,30px)",lineHeight:1.22,fontWeight:800,letterSpacing:-0.5,margin:"12px 0 8px"}},step.q),
-    step.help&&e("p",{style:{color:C.mut,fontSize:14,margin:"0 0 30px",lineHeight:1.5}},step.help),
-    step.type==="escala"&&e(Escala,{value,onSet}),
-    (step.type==="faixa"||step.type==="select")&&e(Opcoes,{options:step.options,value,type:step.type,onSet}),
+    e("span",{style:{fontSize:11,fontWeight:700,letterSpacing:"0.22em",color:C.gold,textTransform:"uppercase"}},step.block),
+    e("h2",{style:{fontSize:"clamp(24px,4vw,34px)",lineHeight:1.16,fontWeight:800,letterSpacing:"-0.02em",margin:"12px 0 8px"}},step.q),
+    step.help&&e("p",{style:{color:C.mut,fontSize:14.5,margin:"0 0 30px",lineHeight:1.5}},step.help),
+    step.type==="escala"&&e(Escala,{value,onSet,onAuto:autoNext}),
+    (step.type==="faixa"||step.type==="select")&&e(Opcoes,{options:step.options,value,type:step.type,onSet,onAuto:autoNext}),
     step.type==="numero"&&e(Numero,{step,value,onSet}),
     step.type==="multi"&&e(Multi,{options:step.options,value,onSet}),
     canNS&&e("button",{onClick:()=>onSet(NAOSEI),className:"btn",style:{marginTop:16,background:value===NAOSEI?C.blue:"transparent",color:value===NAOSEI?"#000":C.mut,border:"1px dashed "+(value===NAOSEI?C.blue:C.line),borderRadius:11,padding:"12px 18px",fontSize:14,fontWeight:700,width:"100%"}}, value===NAOSEI?"✓ Não sei dizer (faz parte da análise)":"Não sei dizer / não controlo isso"),
     e("div",{style:{display:"flex",gap:12,justifyContent:"space-between",marginTop:28}},
-      e("button",{onClick:onPrev,disabled:i===0,className:"btn",style:{background:"transparent",color:i===0?C.line:C.mut,border:"1px solid "+C.line,borderRadius:11,padding:"13px 22px",fontSize:15,fontWeight:700}},"← Voltar"),
-      e("button",{onClick:onNext,disabled:!answered,className:"btn",style:{background:answered?C.gold:C.card,color:answered?"#000":C.mut2,border:"none",borderRadius:11,padding:"13px 30px",fontSize:15,fontWeight:800,flex:1,maxWidth:320,cursor:answered?"pointer":"not-allowed",boxShadow:answered?"0 10px 24px -10px "+C.gold+"88":"none"}}, i===total-1?"Ver meu diagnóstico →":"Próxima →")
+      e("button",{onClick:onPrev,disabled:i===0,className:"btn",style:{background:"transparent",color:i===0?C.line:C.mut,border:"1px solid "+C.line,borderRadius:100,padding:"13px 22px",fontSize:14,fontWeight:600}},"← Voltar"),
+      e("button",{onClick:onNext,disabled:!answered,className:"btn",style:{background:answered?"linear-gradient(135deg,"+C.gold+","+C.gold2+")":"rgba(255,255,255,0.04)",color:answered?"#0a0a0f":C.mut2,border:"none",borderRadius:100,padding:"14px 32px",fontSize:15,fontWeight:700,flex:1,maxWidth:320,cursor:answered?"pointer":"not-allowed",boxShadow:answered?"0 14px 36px rgba(255,179,0,0.32), inset 0 1px 0 rgba(255,255,255,0.25)":"none"}}, i===total-1?"Ver meu diagnóstico →":"Próxima →")
     )
   );
 }
 
-function Escala({value,onSet}){
+function Escala({value,onSet,onAuto}){
   return e("div",null,
     e("div",{style:{display:"grid",gridTemplateColumns:"repeat(11,1fr)",gap:6,marginBottom:18}},
-      Array.from({length:11},(_,n)=>{const on=value===n;return e("button",{key:n,onClick:()=>onSet(n),className:"num btn",style:{aspectRatio:"1",borderRadius:10,border:"1px solid "+(on?C.gold:C.line),background:on?C.gold:C.card,color:on?"#000":C.white,fontWeight:800,fontSize:14}},n);})
+      Array.from({length:11},(_,n)=>{const on=value===n;return e("button",{key:n,onClick:()=>onAuto?onAuto(n):onSet(n),className:"num btn",style:{aspectRatio:"1",borderRadius:10,border:"1px solid "+(on?C.gold:C.line),background:on?"linear-gradient(135deg,"+C.gold+","+C.gold2+")":C.card,color:on?"#0a0a0f":C.white,fontWeight:800,fontSize:14,boxShadow:on?"0 8px 18px rgba(255,179,0,0.30)":"none"}},n);})
     ),
-    e("div",{style:{display:"flex",justifyContent:"space-between",fontSize:11.5,color:C.mut2,fontWeight:600}},
+    e("div",{style:{display:"flex",justifyContent:"space-between",fontSize:11.5,color:C.mut2,fontWeight:600,letterSpacing:"0.04em"}},
       e("span",null,"0 · crítico"),e("span",null,"5 · parcial"),e("span",null,"10 · maduro"))
   );
 }
 
-function Opcoes({options,value,type,onSet}){
-  return e("div",{style:{display:"grid",gap:10}},
+function Opcoes({options,value,type,onSet,onAuto}){
+  return e("div",{className:"stagger",style:{display:"grid",gap:10}},
     options.map((o,k)=>{
       const v=type==="select"?o:o.v, label=type==="select"?o:o.label, on=value===v;
-      return e("button",{key:k,onClick:()=>onSet(v),className:"opt btn",style:{textAlign:"left",background:on?C.gold:C.card,color:on?"#000":C.white,border:"1px solid "+(on?C.gold:C.line),borderRadius:12,padding:"16px 18px",fontSize:15.5,fontWeight:700,display:"flex",alignItems:"center",gap:12}},
-        e("span",{style:{width:20,height:20,borderRadius:"50%",border:"2px solid "+(on?"#000":C.mut2),display:"grid",placeItems:"center",flexShrink:0}}, on&&e("span",{style:{width:9,height:9,borderRadius:"50%",background:"#000"}})),
+      return e("button",{key:k,onClick:()=>onAuto?onAuto(v):onSet(v),className:"opt btn"+(on?" is-just-picked":""),style:{textAlign:"left",background:on?"rgba(255,179,0,0.10)":C.card,color:C.white,border:"1px solid "+(on?C.gold:C.line),borderRadius:14,padding:"16px 18px",fontSize:15.5,fontWeight:600,display:"flex",alignItems:"center",gap:14}},
+        e("span",{style:{width:22,height:22,borderRadius:"50%",border:"1.5px solid "+(on?C.gold:"rgba(255,255,255,0.2)"),background:on?C.gold:"rgba(0,0,0,0.2)",display:"grid",placeItems:"center",flexShrink:0,transition:"all .25s var(--ease)"}}, on&&e("svg",{width:11,height:11,viewBox:"0 0 24 24",stroke:"#0a0a0f",strokeWidth:3,fill:"none",strokeLinecap:"round",strokeLinejoin:"round"},e("polyline",{points:"20 6 9 17 4 12"}))),
         label);
     })
   );
@@ -281,9 +318,9 @@ function Numero({step,value,onSet}){
 function Multi({options,value,onSet}){
   const sel=Array.isArray(value)?value:[];
   const toggle=o=>onSet(sel.includes(o)?sel.filter(x=>x!==o):[...sel,o]);
-  return e("div",{style:{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:10}},
-    options.map((o,k)=>{const on=sel.includes(o);return e("button",{key:k,onClick:()=>toggle(o),className:"opt btn",style:{textAlign:"left",background:on?C.gold+"1a":C.card,color:on?C.gold:C.white,border:"1px solid "+(on?C.gold:C.line),borderRadius:12,padding:"14px 16px",fontSize:14.5,fontWeight:700,display:"flex",alignItems:"center",gap:10}},
-      e("span",{style:{width:20,height:20,borderRadius:6,border:"2px solid "+(on?C.gold:C.mut2),display:"grid",placeItems:"center",flexShrink:0,background:on?C.gold:"transparent",color:"#000",fontSize:13,fontWeight:900}}, on?"✓":""),
+  return e("div",{className:"stagger",style:{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:10}},
+    options.map((o,k)=>{const on=sel.includes(o);return e("button",{key:k,onClick:()=>toggle(o),className:"opt btn",style:{textAlign:"left",background:on?"rgba(255,179,0,0.10)":C.card,color:C.white,border:"1px solid "+(on?C.gold:C.line),borderRadius:12,padding:"14px 16px",fontSize:14.5,fontWeight:600,display:"flex",alignItems:"center",gap:12}},
+      e("span",{style:{width:20,height:20,borderRadius:6,border:"1.5px solid "+(on?C.gold:"rgba(255,255,255,0.2)"),display:"grid",placeItems:"center",flexShrink:0,background:on?C.gold:"transparent",transition:"all .2s var(--ease)"}}, on&&e("svg",{width:11,height:11,viewBox:"0 0 24 24",stroke:"#0a0a0f",strokeWidth:3,fill:"none",strokeLinecap:"round",strokeLinejoin:"round"},e("polyline",{points:"20 6 9 17 4 12"}))),
       o);})
   );
 }
