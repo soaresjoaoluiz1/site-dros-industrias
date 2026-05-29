@@ -424,8 +424,8 @@ function Result({r,a,onRestart}){
     const fatV = a.fatFaixa === NAOSEI || a.fatFaixa == null ? 0 : Number(a.fatFaixa);
     const fatItem = FAT_FAIXAS.find(x => x.v === fatV);
     const fatLabel = fatItem ? fatItem.label : '';
-    const isMais500k = fatV >= 500000;
-    const tier = fatV >= 500000 ? 'mais500k' : (fatV > 0 ? 'menos500k' : '');
+    const isMais100k = fatV >= 100000;
+    const tier = fatV >= 100000 ? 'mais100k' : (fatV > 0 ? 'menos100k' : '');
 
     const eventId = genEventId();
     const cleanArr = (x) => Array.isArray(x) ? x.join(', ') : (x === NAOSEI ? 'não sei dizer' : (x || ''));
@@ -528,21 +528,21 @@ function Result({r,a,onRestart}){
           currency: 'BRL',
         }, { eventID: eventId });
 
-        if (isMais500k) {
-          fbq('trackCustom', 'leadquizmaisde500k', {
+        if (isMais100k) {
+          fbq('trackCustom', 'leadquizmaisde100k', {
             content_name: 'Raio-X Comercial DROS',
             content_category: 'industria',
             faturamento: fatLabel,
-            tier: 'mais500k',
+            tier: 'mais100k',
             score: payload.score_overall,
             currency: 'BRL',
           }, { eventID: eventId + '-fat' });
         } else if (fatV > 0) {
-          fbq('trackCustom', 'leadquizmenos500k', {
+          fbq('trackCustom', 'leadquizmenos100k', {
             content_name: 'Raio-X Comercial DROS',
             content_category: 'industria',
             faturamento: fatLabel,
-            tier: 'menos500k',
+            tier: 'menos100k',
             score: payload.score_overall,
             currency: 'BRL',
           }, { eventID: eventId + '-fat' });

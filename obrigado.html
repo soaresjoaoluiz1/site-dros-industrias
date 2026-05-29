@@ -124,37 +124,38 @@
       currency: 'BRL'
     }, { eventID: eventId });
 
-    // 2) Evento custom por faixa de faturamento (>= R$ 500 mil/mes ou nao)
-    // Faixas do form de diagnostico que sao >= 500k:
+    // 2) Evento custom por faixa de faturamento (>= R$ 100 mil/mes ou nao)
+    // Faixas do form de diagnostico que sao >= 100k:
+    //  - "R$ 100 mil – R$ 500 mil"
     //  - "R$ 500 mil – R$ 1 milhão"
     //  - "R$ 1 mi – R$ 5 mi"
     //  - "R$ 5 mi – R$ 10 mi"
     //  - "Acima de R$ 10 mi"
-    var MAIS_500K = [
+    var MAIS_100K = [
+      'R$ 100 mil – R$ 500 mil',
       'R$ 500 mil – R$ 1 milhão',
       'R$ 1 mi – R$ 5 mi',
       'R$ 5 mi – R$ 10 mi',
       'Acima de R$ 10 mi'
     ];
-    var MENOS_500K = [
-      'Até R$ 100 mil',
-      'R$ 100 mil – R$ 500 mil'
+    var MENOS_100K = [
+      'Até R$ 100 mil'
     ];
 
-    if (MAIS_500K.indexOf(faturamento) >= 0) {
-      fbq('trackCustom', 'leadquizmaisde500k', {
+    if (MAIS_100K.indexOf(faturamento) >= 0) {
+      fbq('trackCustom', 'leadquizmaisde100k', {
         content_name: 'Diagnóstico DROS',
         content_category: 'industria',
         faturamento: faturamento,
-        tier: 'mais500k',
+        tier: 'mais100k',
         currency: 'BRL'
       }, { eventID: eventId + '-fat' });
-    } else if (MENOS_500K.indexOf(faturamento) >= 0) {
-      fbq('trackCustom', 'leadquizmenos500k', {
+    } else if (MENOS_100K.indexOf(faturamento) >= 0) {
+      fbq('trackCustom', 'leadquizmenos100k', {
         content_name: 'Diagnóstico DROS',
         content_category: 'industria',
         faturamento: faturamento,
-        tier: 'menos500k',
+        tier: 'menos100k',
         currency: 'BRL'
       }, { eventID: eventId + '-fat' });
     }

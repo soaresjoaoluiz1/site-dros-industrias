@@ -53,7 +53,7 @@ const COLS_QUIZ = [
   'Score Geral (0-10)','Faixa','Band Label',
   'Score Previsibilidade','Score Novos Clientes','Score Processo','Score Digital','Score Gestão',
   'Ganho Mensal Projetado (R$)','Ganho Anual Projetado (R$)',
-  'Faturamento >= R$ 500k?','Tier (Pixel)',
+  'Faturamento >= R$ 100k?','Tier (Pixel)',
 
   // === Origem / tracking ===
   'Traffic Type','UTM Source','UTM Medium','UTM Campaign','UTM Term','UTM Content','UTM ID',
@@ -133,7 +133,7 @@ function writeDiagRow(d, ip) {
 function writeQuizRow(d, ip) {
   const sheet = getOrCreateSheet(SHEET_QUIZ, COLS_QUIZ);
   const fatValor = Number(d.fat_valor || 0);
-  const tier = fatValor >= 500000 ? 'mais500k' : (fatValor > 0 ? 'menos500k' : '');
+  const tier = fatValor >= 100000 ? 'mais100k' : (fatValor > 0 ? 'menos100k' : '');
   sheet.appendRow([
     new Date(), d.event_id || '', d.submitted_at || '', d.time_on_page_seconds || '',
 
@@ -151,7 +151,7 @@ function writeQuizRow(d, ip) {
     d.score_overall || '', d.faixa || '', d.band_label || '',
     d.score_prev || '', d.score_novos || '', d.score_proc || '', d.score_digital || '', d.score_gestao || '',
     d.ganho_mensal || '', d.ganho_anual || '',
-    fatValor >= 500000 ? 'sim' : (fatValor > 0 ? 'não' : ''),
+    fatValor >= 100000 ? 'sim' : (fatValor > 0 ? 'não' : ''),
     tier,
 
     // Tracking
@@ -204,7 +204,7 @@ function sendNotification(d) {
       ? [
           'Segmento: ' + (d.setor || '-'),
           'Faturamento: ' + (d.fatFaixa_label || '-'),
-          'Tier: ' + (Number(d.fat_valor || 0) >= 500000 ? 'mais500k' : 'menos500k'),
+          'Tier: ' + (Number(d.fat_valor || 0) >= 100000 ? 'mais100k' : 'menos100k'),
           'Score Geral: ' + (d.score_overall || '-'),
           'Faixa: ' + (d.band_label || '-'),
           '',
