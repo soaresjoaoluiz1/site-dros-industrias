@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1350px; overflow: hidden; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+  .slide { width: 1080px; height: 1350px; position: relative; background: #1A1611; overflow: hidden; }
+  .paper-texture { position: absolute; inset: 0; opacity: 0.35; mix-blend-mode: screen; pointer-events: none; }
+  .vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.55) 100%); pointer-events: none; }
+  .top-rule, .bottom-rule { position: absolute; left: 80px; right: 80px; height: 1px; background: #EDE5D1; opacity: 0.3; }
+  .top-rule { top: 60px; } .bottom-rule { bottom: 60px; }
+  .kicker { position: absolute; top: 80px; left: 80px; right: 80px; display: flex; justify-content: space-between; font-size: 14px; letter-spacing: 4px; text-transform: uppercase; color: #EDE5D1; opacity: 0.7; font-weight: 600; }
+  .content { position: absolute; left: 80px; right: 80px; top: 50%; transform: translateY(-50%); text-align: center; }
+  .label { font-family: 'Inter', sans-serif; font-size: 14px; letter-spacing: 8px; text-transform: uppercase; color: #C9A961; font-weight: 700; margin-bottom: 60px; }
+  .line { font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 140px; line-height: 0.95; color: #EDE5D1; letter-spacing: -2px; }
+  .strike { text-decoration: line-through; text-decoration-color: #6B2A2A; text-decoration-thickness: 8px; opacity: 0.55; }
+  .line em { font-style: italic; color: #C9A961; font-weight: 500; }
+  .ornament { font-family: 'Cormorant Garamond', serif; font-size: 38px; color: #C9A961; letter-spacing: 14px; margin: 60px 0 30px; }
+  .footer-meta { position: absolute; bottom: 80px; left: 80px; right: 80px; display: flex; justify-content: space-between; font-size: 13px; letter-spacing: 4px; text-transform: uppercase; color: #EDE5D1; opacity: 0.7; font-weight: 600; }
+</style>
+</head>
+<body>
+  <div class="slide">
+    <svg class="paper-texture" xmlns="http://www.w3.org/2000/svg">
+      <filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0.85  0 0 0 0 0.75  0 0 0 0 0.55  0 0 0 0.45 0"/></filter>
+      <rect width="100%" height="100%" filter="url(#n)"/>
+    </svg>
+    <div class="vignette"></div>
+    <div class="top-rule"></div>
+    <div class="bottom-rule"></div>
+
+    <div class="kicker">
+      <span>DROS · INDÚSTRIA</span>
+      <span>IV. POSICIONAMENTO</span>
+    </div>
+
+    <div class="content">
+      <div class="label">— A virada de chave</div>
+      <h1 class="line"><span class="strike">Canal é sorte.</span></h1>
+      <div class="ornament">✦ ✦ ✦</div>
+      <h2 class="line">Canal é <em>estratégia.</em></h2>
+    </div>
+
+    <div class="footer-meta">
+      <span>drosagencia.com.br</span>
+      <span>05 / 09</span>
+    </div>
+  </div>
+</body>
+</html>

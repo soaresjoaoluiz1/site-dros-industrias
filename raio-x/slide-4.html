@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1350px; overflow: hidden; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+  .slide { width: 1080px; height: 1350px; position: relative; background: #EDE5D1; overflow: hidden; }
+  .paper-texture { position: absolute; inset: 0; opacity: 0.55; mix-blend-mode: multiply; pointer-events: none; }
+  .vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(70, 50, 20, 0.18) 100%); pointer-events: none; }
+  .top-rule, .bottom-rule { position: absolute; left: 80px; right: 80px; height: 1px; background: #1A1611; opacity: 0.4; }
+  .top-rule { top: 60px; } .bottom-rule { bottom: 60px; }
+  .kicker { position: absolute; top: 80px; left: 80px; right: 80px; display: flex; justify-content: space-between; font-size: 14px; letter-spacing: 4px; text-transform: uppercase; color: #1A1611; font-weight: 600; }
+  .header { position: absolute; top: 180px; left: 80px; right: 80px; }
+  .label { font-family: 'Inter', sans-serif; font-size: 13px; letter-spacing: 5px; text-transform: uppercase; color: #6B2A2A; font-weight: 700; margin-bottom: 24px; }
+  .title { font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 78px; line-height: 1.0; color: #1A1611; letter-spacing: -1.5px; }
+  .title em { font-style: italic; color: #6B2A2A; }
+  .list { position: absolute; top: 460px; left: 80px; right: 80px; }
+  .item { display: grid; grid-template-columns: 110px 1fr; gap: 30px; align-items: baseline; padding: 28px 0; border-bottom: 1px solid rgba(26, 22, 17, 0.25); }
+  .item:last-child { border-bottom: 0; }
+  .num { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500; font-size: 70px; color: #6B2A2A; line-height: 1; letter-spacing: -2px; }
+  .text { font-family: 'Inter', sans-serif; font-size: 28px; line-height: 1.25; color: #1A1611; font-weight: 500; letter-spacing: -0.3px; }
+  .footer-meta { position: absolute; bottom: 80px; left: 80px; right: 80px; display: flex; justify-content: space-between; font-size: 13px; letter-spacing: 4px; text-transform: uppercase; color: #1A1611; font-weight: 600; }
+</style>
+</head>
+<body>
+  <div class="slide">
+    <svg class="paper-texture" xmlns="http://www.w3.org/2000/svg">
+      <filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0.35  0 0 0 0 0.25  0 0 0 0 0.12  0 0 0 0.6 0"/></filter>
+      <rect width="100%" height="100%" filter="url(#n)"/>
+    </svg>
+    <div class="vignette"></div>
+    <div class="top-rule"></div>
+    <div class="bottom-rule"></div>
+
+    <div class="kicker">
+      <span>DROS · INDÚSTRIA</span>
+      <span>III. SINTOMAS</span>
+    </div>
+
+    <div class="header">
+      <div class="label">— Você reconhece algum?</div>
+      <h1 class="title">Seis sinais de que o canal<br><em>está te custando vendas.</em></h1>
+    </div>
+
+    <div class="list">
+      <div class="item"><div class="num">01</div><div class="text">Cliente antigo que sumiu e ninguém percebeu</div></div>
+      <div class="item"><div class="num">02</div><div class="text">Regiões inteiras sem nenhum movimento comercial</div></div>
+      <div class="item"><div class="num">03</div><div class="text">WhatsApp lotado, sem processo nem rastreio</div></div>
+      <div class="item"><div class="num">04</div><div class="text">Representante operando sem acompanhamento real</div></div>
+      <div class="item"><div class="num">05</div><div class="text">Venda dependendo de indicação pra acontecer</div></div>
+      <div class="item"><div class="num">06</div><div class="text">Faturamento que oscila demais todo mês</div></div>
+    </div>
+
+    <div class="footer-meta">
+      <span>drosagencia.com.br</span>
+      <span>04 / 09</span>
+    </div>
+  </div>
+</body>
+</html>

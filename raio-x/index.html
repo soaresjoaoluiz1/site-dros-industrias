@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Raio X Comercial — DROS</title>
+  <meta name="description" content="Indústria que vende. Canal não é sorte.">
+  <meta name="theme-color" content="#1A1611">
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="https://drosagencia.com.br/industria/raio-x/">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background: #1a1611;
+      font-family: 'Inter', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .stage {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      padding: 60px 24px 90px;
+    }
+    .frame {
+      position: relative;
+      width: 1080px; height: 1350px;
+      max-width: 100%;
+      transform-origin: center center;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .slide-iframe {
+      width: 1080px; height: 1350px;
+      border: 0;
+      display: block;
+    }
+
+    .nav-btn {
+      position: fixed;
+      top: 50%; transform: translateY(-50%);
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.20);
+      color: #fff;
+      cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.2s ease;
+      z-index: 10;
+    }
+    .nav-btn:hover {
+      background: rgba(255,255,255,0.18);
+      border-color: rgba(255,255,255,0.32);
+    }
+    .nav-btn:disabled {
+      opacity: 0.25; cursor: not-allowed;
+    }
+    .nav-prev { left: 24px; }
+    .nav-next { right: 24px; }
+
+    .dots {
+      position: fixed;
+      bottom: 28px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 8px;
+      z-index: 10;
+      padding: 10px 16px;
+      background: rgba(0,0,0,0.35);
+      border-radius: 100px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.30);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      border: 0;
+      padding: 0;
+    }
+    .dot.is-active {
+      background: #C9A961;
+      width: 28px;
+      border-radius: 100px;
+    }
+
+    .counter {
+      position: fixed;
+      top: 24px; left: 24px;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px; letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      font-weight: 600;
+      z-index: 10;
+    }
+    .counter strong { color: #C9A961; font-weight: 700; }
+
+    .home-link {
+      position: fixed;
+      top: 24px; right: 24px;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px; letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      font-weight: 600;
+      text-decoration: none;
+      z-index: 10;
+      transition: color 0.2s ease;
+    }
+    .home-link:hover { color: #fff; }
+
+    /* Responsive scale of the fixed-size frame */
+    @media (max-width: 1140px) {
+      .frame { transform: scale(calc((100vw - 140px) / 1080)); }
+    }
+    @media (max-width: 720px) {
+      .stage { padding: 70px 20px 90px; }
+      .frame { transform: scale(calc((100vw - 40px) / 1080)); }
+      .nav-btn { width: 42px; height: 42px; font-size: 18px; }
+      .nav-prev { left: 8px; }
+      .nav-next { right: 8px; }
+    }
+
+    /* Fade transition between slides */
+    .frame { transition: opacity 0.28s ease; }
+    .frame.is-changing { opacity: 0; }
+  </style>
+</head>
+<body>
+
+  <div class="counter">Slide <strong id="current">1</strong> / <span id="total">7</span></div>
+  <a href="/" class="home-link">← drosagencia.com.br</a>
+
+  <main class="stage">
+    <div class="frame" id="frame">
+      <iframe id="slide" class="slide-iframe" src="slide-1.html" loading="eager" title="Slide 1"></iframe>
+    </div>
+  </main>
+
+  <button class="nav-btn nav-prev" id="btnPrev" aria-label="Anterior">‹</button>
+  <button class="nav-btn nav-next" id="btnNext" aria-label="Próximo">›</button>
+
+  <div class="dots" id="dots"></div>
+
+  <script>
+    const TOTAL = 7;
+    let current = 1;
+
+    const frame = document.getElementById('frame');
+    const slide = document.getElementById('slide');
+    const counter = document.getElementById('current');
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
+    const dotsContainer = document.getElementById('dots');
+
+    document.getElementById('total').textContent = TOTAL;
+
+    // build dots
+    for (let i = 1; i <= TOTAL; i++) {
+      const d = document.createElement('button');
+      d.className = 'dot' + (i === 1 ? ' is-active' : '');
+      d.dataset.idx = i;
+      d.setAttribute('aria-label', 'Ir para slide ' + i);
+      d.addEventListener('click', () => goTo(i));
+      dotsContainer.appendChild(d);
+    }
+
+    function goTo(n) {
+      if (n < 1 || n > TOTAL || n === current) return;
+      current = n;
+      frame.classList.add('is-changing');
+      setTimeout(() => {
+        slide.src = 'slide-' + n + '.html';
+        slide.setAttribute('title', 'Slide ' + n);
+        frame.classList.remove('is-changing');
+      }, 200);
+      counter.textContent = n;
+      document.querySelectorAll('.dot').forEach((d, i) => {
+        d.classList.toggle('is-active', i + 1 === n);
+      });
+      btnPrev.disabled = n === 1;
+      btnNext.disabled = n === TOTAL;
+    }
+
+    btnPrev.addEventListener('click', () => goTo(current - 1));
+    btnNext.addEventListener('click', () => goTo(current + 1));
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goTo(current + 1); }
+      if (e.key === 'ArrowLeft')  { e.preventDefault(); goTo(current - 1); }
+    });
+
+    // swipe (mobile)
+    let startX = 0;
+    document.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) < 40) return;
+      if (dx < 0) goTo(current + 1);
+      else        goTo(current - 1);
+    }, { passive: true });
+
+    btnPrev.disabled = true;
+  </script>
+</body>
+</html>
