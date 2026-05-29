@@ -527,6 +527,7 @@ function Result({r,a,onRestart}){
           faturamento: fatLabel,
           tier: tier,
           score: payload.score_overall,
+          value: 250,
           currency: 'BRL',
         }, { eventID: eventId });
 
@@ -537,6 +538,7 @@ function Result({r,a,onRestart}){
             faturamento: fatLabel,
             tier: 'mais100k',
             score: payload.score_overall,
+            value: 500,
             currency: 'BRL',
           }, { eventID: eventId + '-fat' });
         } else if (fatV > 0) {
@@ -546,6 +548,7 @@ function Result({r,a,onRestart}){
             faturamento: fatLabel,
             tier: 'menos100k',
             score: payload.score_overall,
+            value: 100,
             currency: 'BRL',
           }, { eventID: eventId + '-fat' });
         }

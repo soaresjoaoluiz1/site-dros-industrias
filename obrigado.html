@@ -122,6 +122,7 @@
       content_name: 'Diagnóstico DROS',
       content_category: 'industria',
       faturamento: faturamento,
+      value: 250,
       currency: 'BRL'
     }, { eventID: eventId });
 
@@ -149,6 +150,7 @@
         content_category: 'industria',
         faturamento: faturamento,
         tier: 'mais100k',
+        value: 500,
         currency: 'BRL'
       }, { eventID: eventId + '-fat' });
     } else if (MENOS_100K.indexOf(faturamento) >= 0) {
@@ -157,6 +159,7 @@
         content_category: 'industria',
         faturamento: faturamento,
         tier: 'menos100k',
+        value: 100,
         currency: 'BRL'
       }, { eventID: eventId + '-fat' });
     }
